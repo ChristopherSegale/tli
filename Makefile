@@ -1,11 +1,12 @@
 CFLAGS=-std=c89 -pedantic -c
+SRC=src
 BIN=tli
 
 all: main
-	$(CC) main.o -o $(BIN)
+	$(CC) $(SRC)/main.o -o $(BIN)
 
 main:
-	$(CC) $(CFLAGS) main.c
+	$(CC) $(CFLAGS) $(SRC)/main.c
 
 clean:
-	rm -f $(BIN) *.o
+	rm -f $(BIN) $(SRC)/*.o
