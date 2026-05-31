@@ -3,10 +3,10 @@ SRC=src
 BIN=tli
 
 all: main
-	$(CC) $(SRC)/main.o -o $(BIN)
+	$(CC) $(src)/main.o -o $(BIN)
 
 main:
-	$(CC) $(CFLAGS) $(SRC)/main.c
+	$(CC) $(CFLAGS) $(SRC)/main.c -o $(SRC)
 
 clean:
 	rm -f $(BIN) $(SRC)/*.o
