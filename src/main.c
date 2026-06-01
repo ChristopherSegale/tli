@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include "argParse.h"
 
 void printUsage(char *programName) {
   printf("Usage instructions for %s:\n", programName);
@@ -9,7 +11,32 @@ void printUsage(char *programName) {
   puts("Running the program with no arguments will launch the interpreter");
 }
 
+void printWIP(char *fn) {
+  printf("Feature %s is still being worked on.\n", fn);
+}
+
 int main(int argc, char *argv[]) {
-  printUsage(argv[0]);
+  if (argc <= 1) {
+    printWIP("interpreter");
+    return 0;
+  }
+  enum failure f = noError;
+  struct argParse *flags = parseArgs(&f, argc, argv);
+  if(f == noDash) {
+    puts("Error: First argument should start with a '-' character.");
+    return 0;
+  }
+  if(flags->compFlag) {
+    printWIP("compile");
+  }
+  if(flags->loadFlag) {
+    printWIP("load");
+  }
+  if(flags->interFlag) {
+    printWIP("interpreter");
+  }
+  if(flags->helpFlag) {
+    printUsage(argv[0]);
+  }
   return 0;
 }
