@@ -11,14 +11,12 @@ struct argParse* initArgs() {
 }
 
 struct argParse* parseArgs(enum failure *f, int argc, char **argv) {
-  int i = 1;
   char *a;
   struct argParse *r = initArgs();
-  while(i < argc) {
+  for(int i = 1; i < argc; i++) {
     a = *(argv + i);
-    char j = *a;
     int k = 0;
-    while(j) {
+    for(char j = *a; j; k++, j = *(a + k)) {
       if(k <= 0 && j != '-') {
 	if(i < 2) {
 	  *f = noDash;
@@ -43,10 +41,7 @@ struct argParse* parseArgs(enum failure *f, int argc, char **argv) {
 	  break;
 	}
       }
-      k++;
-      j = *(a + k);
     }
-    i++;
   }
   return r;
 }
