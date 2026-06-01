@@ -11,7 +11,7 @@ struct argParse* initArgs() {
 }
 
 struct argParse* parseArgs(enum failure *f, int argc, char **argv) {
-  int i = 2;
+  int i = 1;
   char *a;
   struct argParse *r = initArgs();
   while(i < argc) {
@@ -20,7 +20,7 @@ struct argParse* parseArgs(enum failure *f, int argc, char **argv) {
     int k = 0;
     while(j) {
       if(k <= 0 && j != '-') {
-	if(i <= 2) {
+	if(i < 2) {
 	  *f = noDash;
 	  free(r);
 	  return NULL;
