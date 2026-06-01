@@ -14,4 +14,4 @@ struct argParse* initArgs();
 
 struct argParse* parseArgs(enum failure *f, int argc, char **argv);
 
-#endif // ARGPARSE_H
+#endif
