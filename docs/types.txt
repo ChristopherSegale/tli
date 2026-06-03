@@ -1,0 +1,17 @@
+Trivial Lisp is a dynamically typed language. The two basic primitives of the language are nil and t. The nil type is used for equality tests as well as being the default value given to variables. The t type is used for equality tests. When testing for types, all types are treated as true except for nil. All types return nil when testing for null except for nil which will return t.
+
+Ints and floats are the data types for numbers. With trivial Lisp being implemented using C, ints directly relate to the int data type of C while floats relate to the double data type of C.
+
+Trivial Lisp uses ascii for representing characters.
+
+Groupings of a single data type are called arrays, and they can either be statically sized or dynamically sized.
+
+Data of different types can be grouped together using the structure type.
+
+Cons cells are a data type that can hold two values. The first value accessed using the car function while the second value is accessed with the cdr function.
+
+Lists are a data type composed of linked cons cells. The end of a list has its last cons cell with nil as its second value.
+
+Functions are procedures which are also treated as a valid data type. There are two types of functions in Trivial Lisp: primitive functions and native functions. Primitive functions are implemented in C while native functions are implemented in Trivial Lisp.
+
+Symbols are a data type of its own; generally, they are used for testing cases and equality as well as being commonly used to write macros.
