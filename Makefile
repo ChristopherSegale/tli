@@ -1,15 +1,23 @@
 CFLAGS=-std=c99 -pedantic -c
 SRC=src
 BIN=tli
+OBJ=obj
+BINDIR=bin
 
-all: main.o
-	$(CC) $(SRC)/main.o $(SRC)/argParse.o -o $(BIN)
+all: $(BINDIR) main.o argParse.o
+	$(CC) $(OBJ)/main.o $(OBJ)/argParse.o -o $(BINDIR)/$(BIN)
 
-main.o: argParse.o
-	$(CC) $(CFLAGS) $(SRC)/main.c -o $(SRC)/main.o
+main.o: $(OBJ)
+	$(CC) $(CFLAGS) $(SRC)/main.c -o $(OBJ)/main.o
 
-argParse.o:
-	$(CC) $(CFLAGS) $(SRC)/argParse.c -o $(SRC)/argParse.o
+argParse.o: $(OBJ)
+	$(CC) $(CFLAGS) $(SRC)/argParse.c -o $(OBJ)/argParse.o
+
+$(OBJ):
+	mkdir obj
+
+$(BINDIR):
+	mkdir bin
 
 clean:
-	rm -f $(BIN) $(SRC)/*.o
+	rm -f $(BINDIR)/$(BIN) $(OBJ)/*.o
