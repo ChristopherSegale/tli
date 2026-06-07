@@ -19,10 +19,13 @@ argParse.o: $(OBJ)
 	$(CC) $(CFLAGS) $(SRC)/argParse.c -o $(OBJ)/argParse.o
 
 $(OBJ):
-	mkdir obj
+	mkdir -p obj
 
 $(BINDIR):
-	mkdir bin
+	mkdir -p bin
 
 clean:
 	rm -f $(BINDIR)/$(BIN) $(OBJ)/*.o
+
+uninstall:
+	rm -f $(PREFIX)/bin/$(BIN)
