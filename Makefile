@@ -3,6 +3,11 @@ SRC=src
 BIN=tli
 OBJ=obj
 BINDIR=bin
+PREFIX=/usr/local
+
+install: all
+	mkdir -p $(PREFIX)/bin
+	cp $(BINDIR)/$(BIN) $(PREFIX)/bin
 
 all: $(BINDIR) main.o argParse.o
 	$(CC) $(OBJ)/main.o $(OBJ)/argParse.o -o $(BINDIR)/$(BIN)

@@ -12,6 +12,12 @@
       pkgs = nixpkgs.legacyPackages.${system};
       inherit (pkgs.stdenv) mkDerivation;
     in {
+      packages.default = mkDerivation {
+        name = "Trivial Lisp";
+	version = "1.0";
+	src = ./.;
+	makeFlags = [ "PREFIX=$(out)" ];
+      };
       devShells.default = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
 	  gnumake
