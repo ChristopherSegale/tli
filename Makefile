@@ -9,14 +9,17 @@ install: all
 	mkdir -p $(PREFIX)/bin
 	cp $(BINDIR)/$(BIN) $(PREFIX)/bin
 
-all: $(BINDIR) main.o argParse.o
-	$(CC) $(OBJ)/main.o $(OBJ)/argParse.o -o $(BINDIR)/$(BIN)
+all: $(BINDIR) main.o argParse.o parseType.o
+	$(CC) $(OBJ)/main.o $(OBJ)/argParse.o $(OBJ)/parseType.o -o $(BINDIR)/$(BIN)
 
 main.o: $(OBJ)
 	$(CC) $(CFLAGS) $(SRC)/main.c -o $(OBJ)/main.o
 
 argParse.o: $(OBJ)
 	$(CC) $(CFLAGS) $(SRC)/argParse.c -o $(OBJ)/argParse.o
+
+parseType.o: $(OBJ)
+	$(CC) $(CFLAGS) $(SRC)/parseType.c -o $(OBJ)/parseType.o
 
 $(OBJ):
 	mkdir -p obj
