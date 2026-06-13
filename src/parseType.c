@@ -45,3 +45,16 @@ int checkDecimal(char *token, enum parseError *error) {
   }
   return 1;
 }
+
+int checkArray(char *token) {
+  return (*token == '#') &&
+    (*(token + 1) == '(') &&
+    (*(token + (strlen(token) - 1)) == ')');
+}
+
+int checkStructure(char *token) {
+  return (*token == '#') &&
+    (*(token + 1) == 'S') &&
+    (*(token + 2) == '(') &&
+    (*(token + (strlen(token) - 1)) == ')');
+}
