@@ -1,7 +1,7 @@
 #ifndef PARSETYPE_H
 #define PARSETYPE_H
 
-#include "dataType.h"
+#include "dataTypes.h"
 
 enum parseError { not_decimal, multiple_dot };
 

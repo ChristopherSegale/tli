@@ -2,7 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "parseType.h"
-#include "dataType.h"
+#include "dataTypes.h"
 
 int checkT(char *token) {
   if (strcmp(token, "T") == 0)
@@ -33,11 +33,15 @@ int checkDecimal(char *token, enum parseError *error) {
     if (!isdigit(c) || c != '.') {
       *error = not_decimal;
       return 0;
+    }
     if (c == '.') {
       if (!isDot)
 	isDot = 1;
-      *error = multiple_dot;
-      return 0;
+      else {
+	*error = multiple_dot;
+	return 0;
+      }
+    }
   }
   return 1;
 }
