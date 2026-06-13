@@ -5,17 +5,11 @@
 #include "dataTypes.h"
 
 int checkT(char *token) {
-  if (strcmp(token, "T") == 0)
-    return 1;
-  else
-    return 0;
+  return strcmp(token, "T") == 0;
 }
 
 int checkNil(char *token) {
-  if (strcmp(token, "NIL") == 0)
-    return 1;
-  else
-    return 0;
+  return strcmp(token, "NIL") == 0;
 }
 
 int checkInteger(char *token) {
@@ -57,4 +51,14 @@ int checkStructure(char *token) {
     (*(token + 1) == 'S') &&
     (*(token + 2) == '(') &&
     (*(token + (strlen(token) - 1)) == ')');
+}
+
+int checkCons(char *token, enum parseError *error) {
+  int length = strlen(token), i = 0;
+  if (!(*token == '(') || !(*(token + (length - 1)) == ')'))
+    return 0;
+  int pc = 0, contents = 0;
+  for (char c = *(token + i); i < length; i++, c = *(token + i)) {
+    
+  }
 }
