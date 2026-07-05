@@ -1,0 +1,13 @@
+The lexer has the following tokens: LP, RP, sharp, quote, backQuote, comma, doubleQuote, substring, number, symbol, end
+
+LP and RP correspond to the left parentheses and right parentheses which are used to mark the start and end of a list respectively.
+
+The sharp token gets parsed into various forms depending on the tokens after it.
+
+The quote token makes a symbol or list unevaluated while backQuote is used to selectively evaluate forms using the comma token.
+
+The doubleQuote tokens marks the beginning and end of a string while substring marks the contents of a string.
+
+The number token represents a integer or decimal value while the symbol token represents anything that is not a number or list.
+
+The end token marks the end of the abstract syntax tree. The AST is end-terminated.
