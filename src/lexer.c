@@ -32,6 +32,7 @@ struct lexeme *read(char *expression) {
 
 int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIndex, int *stringIndex, enum state *st, int *pc) {
   int noAlloc = 0;
+  int igq = 0;
   switch (*st) {
   case read:
     if(lchar == '(') {
@@ -51,7 +52,7 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
       *st = comment;
     }
     else if(lchar == '#') {
-      *(tree + *treeIndex) = makeSharp(pchar);
+      *(tree + *treeIndex) = makeSharp();
       *(treeIndex)++;
     }
     else if(lchar == '`') {
@@ -74,22 +75,29 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
     }
     break;
   case qt:
-    if(lchar == '\\') {
-      if(pchar == '"') {
-	*(string + *stringIndex) = '"';
+    if(lchar == '"') {
+      if(igq) {
+	*(tree + *treeIndex) = makeSubstring('"');
+	igq = 0;
       }
-      *(stringIndex)++;
+      else {
+	if(pchar != ' ')
+	  return 1;
+	*st = read;
+        *(tree + *treeIndex) = makeDoubleQuote();
+      }
     }
-    else if(lchar == '"') {
-      if(pchar != ' ')
-	return 1;
-      *(string + *stringIndex) = '\0';
-      *st = read;
-      *stringIndex = 0;
-      *(tree + *treeIndex) = makeDoubleQuote(string, &noAlloc);
-      if(noAlloc)
-	return 1;
-    }
+    else {
+      if(lchar == '\\') {
+	if(igq) {
+	  *(tree + *treeIndex) = makeSubstring('\\');
+	  igq = 0;
+	}
+	else
+	  igq = 1;
+      }
+      else
+	*(tree + *treeIndex) = makeSubstring(lchar);
     break;
   }
 }
@@ -127,14 +135,12 @@ struct lexeme makeComma() {
 }
 
 struct lexeme makeDoubleQuote(char *token, int *fail) {
-  struct lexeme val = makeLexeme(doubleQuote);
-  int size = strlen(token);
-  val.data = malloc((sizeof(char) * size) + 1);
-  if (!(val.data)) {
-    *fail = 1;
-    return val;
-  }
-  strcpy(val.data, token);
+  return makeLexeme(doubleQuote);
+}
+
+struct lexeme makeSubstring(char token) {
+  struct lexeme val = makeLexeme(substring);
+  *(val.data) = token;
   return val;
 }
 
