@@ -215,8 +215,6 @@ struct lexeme *read(char *expression) {
       free(ast);
       return NULL;
     }
-    if(c == '#' || c == '\\')
-      i++;
     if(i < (size - 1))
       p = *(expression + i + 1);
   }
