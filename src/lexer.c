@@ -206,6 +206,7 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
 	    return 1;
 	  *stringIndex = 0;
 	  *(treeIndex)++;
+	  *(pc)++;
 	  *st = reading;
 	}
 	else
