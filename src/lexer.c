@@ -172,6 +172,10 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
 	return 1;
     }
     else {
+      if(*stringIndex < BUFFERSIZE)
+	*(string + *stringIndex) = '\0';
+      else
+	return 1;
       if(isNumber(string))
 	*(tree + *treeIndex) = makeNumber(string, &noAlloc);
       else 
@@ -218,6 +222,6 @@ struct lexeme *read(char *expression) {
     if(i < (size - 1))
       p = *(expression + i + 1);
   }
-  *(ast + j + 1) = makeEnd();
+  *(ast + j) = makeEnd();
   return ast;
 }
