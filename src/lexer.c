@@ -6,7 +6,7 @@
 /* symbols have a 50 character limit */
 #define BUFFERSIZE 51
 
-enum state { comment, sharpComment, qt, collect, reading };
+enum state { comment, sharpComment, qt, collect, hashCollect, reading };
 
 int isNumber(char *string) {
   int useDecimal = 0;
@@ -38,8 +38,16 @@ struct lexeme makeRP() {
   return makeLexeme(rp);
 }
 
-struct lexeme makeSharp() {
-  return makeLexeme(sharp);
+struct lexeme makeSharp(char *token, int *fail) {
+  struct lexeme val = makeLexeme(sharp);
+  int size = strlen(token);
+  val.data = malloc((sizeof(char) * size) + 1);
+  if(!(val.data)) {
+    *fail = 1;
+    return val;
+  }
+  strcpy(val.data, token);
+  return val;
 }
 
 struct lexeme makeQuote() {
@@ -118,8 +126,7 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
       if(pchar == '|')
 	*st = sharpComment;
       else {
-	*(tree + *treeIndex) = makeSharp();
-	*(treeIndex)++;
+	*st = hashCollect;
       }
     }
     else if(lchar == '`') {
@@ -183,7 +190,40 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
       if(noAlloc)
 	return 1;
       *stringIndex = 0;
-      *treeIndex++;
+      *(treeIndex)++;
+      *st = reading;
+    }
+    break;
+  case hashCollect:
+    if(!isspace(lchar)) {
+      if(*stringIndex < (BUFFERSIZE - 1)) {
+	*(string + *stringIndex) = lchar;
+	*(stringIndex)++;
+	if(lchar == '(' && *stringIndex < BUFFERSIZE) {
+	  *(string + *stringIndex) = '\0';
+	  *(tree + *treeIndex) = makeSharp(string, &noAlloc);
+	  if(noAlloc)
+	    return 1;
+	  *stringIndex = 0;
+	  *(treeIndex)++;
+	  *st = reading;
+	}
+	else
+	  return 1;
+      }
+      else
+	return 1;
+    }
+    else {
+      if(*stringIndex < BUFFERSIZE)
+	*(string + *stringIndex) = '\0';
+      else
+	return 1;
+      *(tree + *treeIndex) = makeSharp(string, &noAlloc);
+      if(noAlloc)
+	return 1;
+      *stringIndex = 0;
+      *(treeIndex)++;
       *st = reading;
     }
     break;
