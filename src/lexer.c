@@ -8,96 +8,40 @@
 
 enum state { comment, sharpComment, qt, collect, hashCollect, reading };
 
-int isNumber(char *string) {
-  int useDecimal = 0;
-  for(int i = 0; i < strlen(string); i++) {
-    char c = *(string + i);
-    if (c == '.') {
-      if(useDecimal)
-	return 1;
-      else
-	useDecimal = 1;
+int isNumber(char *string);
+struct lexeme makeLexeme(enum lexChars token);
+struct lexeme makeLP();
+struct lexeme makeRP();
+struct lexeme makeSharp(char *token, int *fail);
+struct lexeme makeQuote();
+struct lexeme makeBackQuote();
+struct lexeme makeComma();
+struct lexeme makeDoubleQuote();
+struct lexeme makeSubstring(char token);
+struct lexeme makeNumber(char *token, int *fail);
+struct lexeme makeSymbol(char *token, int *fail);
+struct lexeme makeEnd();
+int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIndex, int *stringIndex, enum state *st, int *pc);
+
+struct lexeme *read(char *expression) {
+  int size = strlen(expression);
+  struct lexeme *ast = malloc(sizeof(struct lexeme) * size);
+  if (!ast)
+    return NULL;
+  int i = 0, pairCount = 0, j = 0, k = 0; //j index for ast and k index for token
+  char buffer[BUFFERSIZE];
+  enum state st = reading;
+  for(char c = *(expression + i), p = *(expression + i + 1); i < size; i++, c = *(expression + i)) {
+    int fail = parse(ast, c, p, buffer, &j, &k, &st, &pairCount);
+    if(fail) {
+      free(ast);
+      return NULL;
     }
-    else if(!isdigit(c))
-      return 1;
+    if(i < (size - 1))
+      p = *(expression + i + 1);
   }
-  return 0;
-}
-
-struct lexeme makeLexeme(enum lexChars token) {
-  struct lexeme val;
-  val.lexType = token;
-  return val;
-}
-
-struct lexeme makeLP() {
-  return makeLexeme(lp);
-}
-
-struct lexeme makeRP() {
-  return makeLexeme(rp);
-}
-
-struct lexeme makeSharp(char *token, int *fail) {
-  struct lexeme val = makeLexeme(sharp);
-  int size = strlen(token);
-  val.data = malloc((sizeof(char) * size) + 1);
-  if(!(val.data)) {
-    *fail = 1;
-    return val;
-  }
-  strcpy(val.data, token);
-  return val;
-}
-
-struct lexeme makeQuote() {
-  return makeLexeme(quote);
-}
-
-struct lexeme makeBackQuote() {
-  return makeLexeme(backQuote);
-}
-
-struct lexeme makeComma() {
-  return makeLexeme(comma);
-}
-
-struct lexeme makeDoubleQuote() {
-  return makeLexeme(doubleQuote);
-}
-
-struct lexeme makeSubstring(char token) {
-  struct lexeme val = makeLexeme(substring);
-  *(val.data) = token;
-  return val;
-}
-
-struct lexeme makeNumber(char *token, int *fail) {
-  struct lexeme val = makeLexeme(number);
-  int size = strlen(token);
-  val.data = malloc((sizeof(char) * size) + 1);
-  if (!(val.data)) {
-    *fail = 1;
-    return val;
-  }
-  strcpy(val.data, token);
-  return val;
-}
-
-struct lexeme makeSymbol(char *token, int *fail) {
-  struct lexeme val = makeLexeme(symbol);
-  int size = strlen(token);
-  val.data = malloc((sizeof(char) * size) + 1);
-  if (!(val.data)) {
-    *fail = 1;
-    return val;
-  }
-  strcpy(val.data, token);
-  return val;
-}
-
-struct lexeme makeEnd() {
-  return makeLexeme(end);
+  *(ast + j) = makeEnd();
+  return ast;
 }
 
 int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIndex, int *stringIndex, enum state *st, int *pc) {
@@ -246,23 +190,94 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
   }
 }
 
-struct lexeme *read(char *expression) {
-  int size = strlen(expression);
-  struct lexeme *ast = malloc(sizeof(struct lexeme) * size);
-  if (!ast)
-    return NULL;
-  int i = 0, pairCount = 0, j = 0, k = 0; //j index for ast and k index for token
-  char buffer[BUFFERSIZE];
-  enum state st = reading;
-  for(char c = *(expression + i), p = *(expression + i + 1); i < size; i++, c = *(expression + i)) {
-    int fail = parse(ast, c, p, buffer, &j, &k, &st, &pairCount);
-    if(fail) {
-      free(ast);
-      return NULL;
+int isNumber(char *string) {
+  int useDecimal = 0;
+  for(int i = 0; i < strlen(string); i++) {
+    char c = *(string + i);
+    if (c == '.') {
+      if(useDecimal)
+	return 1;
+      else
+	useDecimal = 1;
     }
-    if(i < (size - 1))
-      p = *(expression + i + 1);
+    else if(!isdigit(c))
+      return 1;
   }
-  *(ast + j) = makeEnd();
-  return ast;
+  return 0;
+}
+
+struct lexeme makeLexeme(enum lexChars token) {
+  struct lexeme val;
+  val.lexType = token;
+  return val;
+}
+
+struct lexeme makeLP() {
+  return makeLexeme(lp);
+}
+
+struct lexeme makeRP() {
+  return makeLexeme(rp);
+}
+
+struct lexeme makeSharp(char *token, int *fail) {
+  struct lexeme val = makeLexeme(sharp);
+  int size = strlen(token);
+  val.data = malloc((sizeof(char) * size) + 1);
+  if(!(val.data)) {
+    *fail = 1;
+    return val;
+  }
+  strcpy(val.data, token);
+  return val;
+}
+
+struct lexeme makeQuote() {
+  return makeLexeme(quote);
+}
+
+struct lexeme makeBackQuote() {
+  return makeLexeme(backQuote);
+}
+
+struct lexeme makeComma() {
+  return makeLexeme(comma);
+}
+
+struct lexeme makeDoubleQuote() {
+  return makeLexeme(doubleQuote);
+}
+
+struct lexeme makeSubstring(char token) {
+  struct lexeme val = makeLexeme(substring);
+  *(val.data) = token;
+  return val;
+}
+
+struct lexeme makeNumber(char *token, int *fail) {
+  struct lexeme val = makeLexeme(number);
+  int size = strlen(token);
+  val.data = malloc((sizeof(char) * size) + 1);
+  if (!(val.data)) {
+    *fail = 1;
+    return val;
+  }
+  strcpy(val.data, token);
+  return val;
+}
+
+struct lexeme makeSymbol(char *token, int *fail) {
+  struct lexeme val = makeLexeme(symbol);
+  int size = strlen(token);
+  val.data = malloc((sizeof(char) * size) + 1);
+  if (!(val.data)) {
+    *fail = 1;
+    return val;
+  }
+  strcpy(val.data, token);
+  return val;
+}
+
+struct lexeme makeEnd() {
+  return makeLexeme(end);
 }
