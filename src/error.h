@@ -3,8 +3,8 @@
 
 enum errorType { allocation, undefined };
 
-void setError(char *errorString, int lineNumber);
-void setErrorType(enum errorType error, int lineNumber);
+void setError(char *errorString, char *fileName, int lineNumber);
+void setErrorType(enum errorType error, char *fileName, int lineNumber);
 void printError();
 
 #endif
