@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "argParse.h"
+#include "error.c"
 
 void printUsage(char *programName) {
   printf("Usage instructions for %s:\n", programName);
@@ -23,7 +24,8 @@ int main(int argc, char *argv[]) {
   enum failure f = noError;
   struct argParse *flags = parseArgs(&f, argc, argv);
   if(f == noDash) {
-    puts("Error: First argument should start with a '-' character.");
+    setError("First argument should start with a '-' character.", NULL, 0);
+    printError();
     return 0;
   }
   if(flags->compFlag) {
