@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "lexer.h"
+#include "error.h"
 
 /* symbols have a 50 character limit */
 #define BUFFERSIZE 51
@@ -35,10 +36,11 @@ struct lexeme *read(char *expression) {
     int fail = parse(ast, c, p, buffer, &j, &k, &st, &pairCount);
     if(fail) {
       free(ast);
+      printError();
       return NULL;
     }
-    if(i < (size - 1))
-      p = *(expression + i + 1);
+    if(i < (size - 2))
+      p = *(expression + i + 2);
   }
   *(ast + j) = makeEnd();
   return ast;
@@ -78,8 +80,10 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
       *(treeIndex)++;
     }
     else if(lchar == ',') {
-      if(isspace(pchar))
+      if(isspace(pchar)) {
+	setError("Space after comma.", NULL, 0);
 	return 1;
+      }
       *(tree + *treeIndex) = makeComma();
       *(treeIndex)++;
     }
@@ -109,7 +113,7 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
 	  *(treeIndex)++;
 	}
       }
-      else
+      else 
 	igq = 1;
     }
     break;
@@ -119,20 +123,26 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
 	*(string + *stringIndex) = lchar;
 	*(stringIndex)++;
       }
-      else
+      else {
+	setError("Symbols cannot exceed 50 characters in length.", NULL, 0);
 	return 1;
+      }
     }
     else {
       if(*stringIndex < BUFFERSIZE)
 	*(string + *stringIndex) = '\0';
-      else
+      else {
+	setError("Symbols cannot exceed 50 characters in length.", NULL, 0);
 	return 1;
+      }
       if(isNumber(string))
 	*(tree + *treeIndex) = makeNumber(string, &noAlloc);
       else 
 	*(tree + *treeIndex) = makeSymbol(string, &noAlloc);
-      if(noAlloc)
+      if(noAlloc) {
+	setErrorType(allocation, NULL, 0);
 	return 1;
+      }
       *stringIndex = 0;
       *(treeIndex)++;
       *st = reading;
@@ -146,27 +156,37 @@ int parse(struct lexeme *tree, char lchar, char pchar, char *string, int *treeIn
 	if(lchar == '(' && *stringIndex < BUFFERSIZE) {
 	  *(string + *stringIndex) = '\0';
 	  *(tree + *treeIndex) = makeSharp(string, &noAlloc);
-	  if(noAlloc)
+	  if(noAlloc) {
+	    setErrorType(allocation, NULL, 0);
 	    return 1;
+	  }
 	  *stringIndex = 0;
 	  *(treeIndex)++;
 	  *(pc)++;
 	  *st = reading;
 	}
-	else
+	else {
+	  setError("Symbols after # cannot exceed 50 characters in length.", NULL, 0);
 	  return 1;
+	}
       }
-      else
+      else {
+	setError("Symbols after # cannot exceed 50 characters in length.", NULL, 0);
 	return 1;
+      }
     }
     else {
       if(*stringIndex < BUFFERSIZE)
 	*(string + *stringIndex) = '\0';
-      else
+      else {
+	setError("Symbols after # cannot exceed 50 characters in length.", NULL, 0);
 	return 1;
+      }
       *(tree + *treeIndex) = makeSharp(string, &noAlloc);
-      if(noAlloc)
+      if(noAlloc) {
+	setErrorType(allocation, NULL, 0);
 	return 1;
+      }
       *stringIndex = 0;
       *(treeIndex)++;
       *st = reading;
