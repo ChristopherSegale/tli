@@ -9,11 +9,14 @@ install: all
 	mkdir -p $(PREFIX)/bin
 	cp $(BINDIR)/$(BIN) $(PREFIX)/bin
 
-all: $(BINDIR) main.o argParse.o parseType.o lexer.o
+all: $(BINDIR) main.o error.o argParse.o parseType.o lexer.o
 	$(CC) $(OBJ)/main.o $(OBJ)/argParse.o $(OBJ)/parseType.o -o $(BINDIR)/$(BIN)
 
 main.o: $(OBJ)
 	$(CC) $(CFLAGS) $(SRC)/main.c -o $(OBJ)/main.o
+
+error.o: $(OBJ)
+	$(CC) $(CFLAGS) $(SRC)/error.c -o $(OBJ)/error.o
 
 argParse.o: $(OBJ)
 	$(CC) $(CFLAGS) $(SRC)/argParse.c -o $(OBJ)/argParse.o
