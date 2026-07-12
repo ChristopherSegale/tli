@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "argParse.h"
-#include "error.c"
+#include "error.h"
 
 void printUsage(char *programName) {
   printf("Usage instructions for %s:\n", programName);
