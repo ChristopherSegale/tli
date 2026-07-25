@@ -1,13 +1,21 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-enum lexChars { lp, rp, sharp, quote, backQuote, comma, doubleQuote, substring, number, symbol, end };
+enum lexChars { lp, rp, sharp, quote, backQuote, comma, doubleQuote, substring, number, symbol };
 
 struct lexeme {
   enum lexChars lexType;
   char *data;
 };
 
-struct lexeme *read(char *expression); 
+struct ast {
+  struct lexeme leaf;
+  struct ast *rest;
+};
+
+struct ast *makeAST(struct lexeme l);
+void cleanAST(struct ast *tree);
+void cleanLexeme(struct lexeme l);
+struct ast *read(char *expression); 
 
 #endif
