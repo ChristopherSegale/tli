@@ -25,7 +25,7 @@ void printLexeme(struct lexeme l) {
     putchar('"');
     break;
   case substring:
-    printf("%s\"\n", l.data);
+    putchar(*(l.data));
     break;
   case number:
     printf("Number: %s\n", l.data);
@@ -44,12 +44,16 @@ void printAST(struct ast *tree) {
   for(struct ast *current = tree; current; current = next) {
     next = current->rest;
     printLexeme(current->leaf);
+    /*if((current->leaf).lexType == substring && (next->leaf).lexType != substring) {
+      putchar('"');
+      putchar('\n');
+    }*/
   }
 }
 
 int main(int argc, char *argv[]) {
   //struct ast *a = read("(defun ()\n  (write \"Hello World!\"))");
-  struct ast *a = read("()'`,");
+  struct ast *a = read("(Test 12 \"quote\" )'`,");
   printAST(a);
   return 0;
 }

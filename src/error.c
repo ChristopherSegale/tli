@@ -55,3 +55,8 @@ void setErrorType(enum errorType error, char *fileName, int lineNumber) {
 void printError() {
   printf("Error: %s\n", errorMessage);
 }
+
+void memoryError() {
+  printf("Error: %s\n", allocationError);
+  exit(1);
+}

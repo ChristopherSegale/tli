@@ -55,6 +55,7 @@ int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIn
       *(pc)--;
     }
     else if(lchar == '"') {
+      addBranch(tree, makeDoubleQuote());
       *st = qt;
     }
     else if(lchar == ';') {
@@ -201,7 +202,7 @@ int isNumber(char *string) {
 struct ast *makeAST(struct lexeme l) {
   struct ast *val = malloc(sizeof(struct ast));
   if(!val) {
-    setErrorType(allocation, NULL, 0);
+    memoryError();
   }
   val->leaf = l;
   val->rest = NULL;
@@ -251,9 +252,9 @@ struct lexeme makeRP() {
 struct lexeme makeSharp(char *token) {
   struct lexeme val = makeLexeme(sharp);
   int size = strlen(token);
-  val.data = malloc((sizeof(char) * size) + 1);
+  val.data = malloc(sizeof(char) * (size + 1));
   if(!(val.data)) {
-    setErrorType(allocation, NULL, 0);
+    memoryError();
     return val;
   }
   strcpy(val.data, token);
@@ -285,9 +286,9 @@ struct lexeme makeSubstring(char token) {
 struct lexeme makeNumber(char *token) {
   struct lexeme val = makeLexeme(number);
   int size = strlen(token);
-  val.data = malloc((sizeof(char) * size) + 1);
+  val.data = malloc(sizeof(char) * (size + 1));
   if (!(val.data)) {
-    setErrorType(allocation, NULL, 0);
+    memoryError();
     return val;
   }
   strcpy(val.data, token);
@@ -297,9 +298,9 @@ struct lexeme makeNumber(char *token) {
 struct lexeme makeSymbol(char *token) {
   struct lexeme val = makeLexeme(symbol);
   int size = strlen(token);
-  val.data = malloc((sizeof(char) * size) + 1);
+  val.data = malloc(sizeof(char) * (size + 1));
   if (!(val.data)) {
-    setErrorType(allocation, NULL, 0);
+    memoryError();
     return val;
   }
   strcpy(val.data, token);
