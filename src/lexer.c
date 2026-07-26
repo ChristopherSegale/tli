@@ -21,8 +21,8 @@ struct lexeme makeDoubleQuote();
 struct lexeme makeSubstring(char token);
 struct lexeme makeNumber(char *token);
 struct lexeme makeSymbol(char *token);
-void addBranch(struct ast *tree, struct lexeme leaf);
-int parse(struct ast *tree, char lchar, char pchar, char *string, int *stringIndex, enum state *st, int *pc, int *igq, int *isPipe);
+void addBranch(struct ast **tree, struct lexeme leaf);
+int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIndex, enum state *st, int *pc, int *igq, int *isPipe);
 
 struct ast *read(char *expression) {
   int size = strlen(expression);
@@ -31,7 +31,7 @@ struct ast *read(char *expression) {
   char buffer[BUFFERSIZE];
   enum state st = reading;
   for(char c = *(expression + i), p = *(expression + i + 1); i < size; i++, c = *(expression + i)) {
-    int fail = parse(tree, c, p, buffer, &j, &st, &pairCount, &igq, &isPipe);
+    int fail = parse(&tree, c, p, buffer, &j, &st, &pairCount, &igq, &isPipe);
     if(fail) {
       cleanAST(tree);
       printError();
@@ -43,7 +43,7 @@ struct ast *read(char *expression) {
   return tree;
 }
 
-int parse(struct ast *tree, char lchar, char pchar, char *string, int *stringIndex, enum state *st, int *pc, int *igq, int *isPipe) {
+int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIndex, enum state *st, int *pc, int *igq, int *isPipe) {
   switch (*st) {
   case reading:
     if(lchar == '(') {
@@ -214,15 +214,15 @@ void cleanAST(struct ast *tree) {
   }
 }
 
-void addBranch(struct ast *tree, struct lexeme leaf) {
-  if(!tree)
-    tree = makeAST(leaf);
+void addBranch(struct ast **tree, struct lexeme leaf) {
+  if(!(*tree))
+    *tree = makeAST(leaf);
   else {
-    struct ast *current = tree;
+    struct ast *current = *tree;
     while(current) {
       current = current->rest;
     }
-    current->rest = makeAST(leaf);
+    current = makeAST(leaf);
   }
 }
 

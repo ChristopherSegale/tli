@@ -33,11 +33,11 @@ void setErrorType(enum errorType error, char *fileName, int lineNumber) {
         setError(allocationError, fileName, lineNumber);
       else
 	setError(allocationError, NULL, lineNumber);
-      printError();
-      exit(1);
     }
     else
       strcpy(errorMessage, allocationError);
+    printError();
+    exit(1);
     break;
   case undefined:
     if(lineNumber > 0) {
