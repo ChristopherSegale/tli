@@ -76,6 +76,8 @@ int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIn
       }
       addBranch(tree, makeComma());
     }
+    else if(lchar == '\'')
+      addBranch(tree, makeQuote());
     else if(isspace(lchar)) {
     }
     else {
@@ -202,6 +204,7 @@ struct ast *makeAST(struct lexeme l) {
     setErrorType(allocation, NULL, 0);
   }
   val->leaf = l;
+  val->rest = NULL;
   return val;
 }
 
@@ -214,7 +217,7 @@ void cleanAST(struct ast *tree) {
   }
 }
 
-void addBranch(struct ast **tree, struct lexeme leaf) {
+/*void addBranch(struct ast **tree, struct lexeme leaf) {
   if(!(*tree))
     *tree = makeAST(leaf);
   else {
@@ -224,6 +227,13 @@ void addBranch(struct ast **tree, struct lexeme leaf) {
     }
     current = makeAST(leaf);
   }
+}*/
+
+void addBranch(struct ast **tree, struct lexeme leaf) {
+  if(!(*tree))
+    *tree = makeAST(leaf);
+  else
+    addBranch(&(**tree).rest, leaf);
 }
 
 struct lexeme makeLexeme(enum lexChars token) {
