@@ -7,6 +7,8 @@
 /* symbols have a 50 character limit */
 #define BUFFERSIZE 51
 
+char buffer[BUFFERSIZE];
+int stringIndex = 0;
 enum state { comment, sharpComment, qt, collect, hashCollect, reading };
 
 int isNumber(char *string);
@@ -22,16 +24,15 @@ struct lexeme makeSubstring(char token);
 struct lexeme makeNumber(char *token);
 struct lexeme makeSymbol(char *token);
 void addBranch(struct ast **tree, struct lexeme leaf);
-int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIndex, enum state *st, int *pc, int *igq, int *isPipe);
+int parse(struct ast **tree, char lchar, char pchar, enum state *st, int *pc, int *igq, int *isPipe);
 
 struct ast *read(char *expression) {
   int size = strlen(expression);
   struct ast *tree = NULL;
-  int i = 0, j = 0, pairCount = 0, igq = 0, isPipe = 0;
-  char buffer[BUFFERSIZE];
+  int i = 0, pairCount = 0, igq = 0, isPipe = 0;
   enum state st = reading;
   for(char c = *(expression + i), p = *(expression + i + 1); i < size; i++, c = *(expression + i)) {
-    int fail = parse(&tree, c, p, buffer, &j, &st, &pairCount, &igq, &isPipe);
+    int fail = parse(&tree, c, p, &st, &pairCount, &igq, &isPipe);
     if(fail) {
       cleanAST(tree);
       printError();
@@ -43,7 +44,7 @@ struct ast *read(char *expression) {
   return tree;
 }
 
-int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIndex, enum state *st, int *pc, int *igq, int *isPipe) {
+int parse(struct ast **tree, char lchar, char pchar, enum state *st, int *pc, int *igq, int *isPipe) {
   switch (*st) {
   case reading:
     if(lchar == '(') {
@@ -82,8 +83,8 @@ int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIn
     else if(isspace(lchar)) {
     }
     else {
-      *(string + *stringIndex) = lchar;
-      *(stringIndex)++;
+      buffer[stringIndex] = lchar;
+      stringIndex++;
       *st = collect;
     }
     break;
@@ -107,9 +108,9 @@ int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIn
     break;
   case collect:
     if(!isspace(lchar)) {
-      if(*stringIndex < (BUFFERSIZE - 1)) {
-	*(string + *stringIndex) = lchar;
-	*(stringIndex)++;
+      if(stringIndex < (BUFFERSIZE - 1)) {
+	buffer[stringIndex] = lchar;
+	stringIndex++;
       }
       else {
 	setError("Symbols cannot exceed 50 characters in length.", NULL, 0);
@@ -117,35 +118,37 @@ int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIn
       }
     }
     else {
-      if(*stringIndex < BUFFERSIZE)
-	*(string + *stringIndex) = '\0';
+      if(stringIndex < BUFFERSIZE)
+	buffer[stringIndex] = '\0';
       else {
 	setError("Symbols cannot exceed 50 characters in length.", NULL, 0);
 	return 1;
       }
-      if(isNumber(string))
-	addBranch(tree, makeNumber(string));
+      if(isNumber(buffer))
+	addBranch(tree, makeNumber(buffer));
       else 
-	addBranch(tree, makeSymbol(string));
-      *stringIndex = 0;
+	addBranch(tree, makeSymbol(buffer));
+      stringIndex = 0;
       *st = reading;
     }
     break;
   case hashCollect:
     if(!isspace(lchar)) {
-      if(*stringIndex < (BUFFERSIZE - 1)) {
-	*(string + *stringIndex) = lchar;
-	*(stringIndex)++;
-	if(lchar == '(' && *stringIndex < BUFFERSIZE) {
-	  *(string + *stringIndex) = '\0';
-	  addBranch(tree, makeSharp(string));
-	  *stringIndex = 0;
-	  *(pc)++;
-	  *st = reading;
-	}
-	else {
-	  setError("Symbols after # cannot exceed 50 characters in length.", NULL, 0);
-	  return 1;
+      if(stringIndex < (BUFFERSIZE - 1)) {
+	buffer[stringIndex] = lchar;
+	stringIndex++;
+	if(lchar == '(') {
+	  if(stringIndex < BUFFERSIZE) {
+	    buffer[stringIndex] = '\0';
+	    addBranch(tree, makeSharp(buffer));
+	    stringIndex = 0;
+	    *(pc)++;
+	    *st = reading;
+	  }
+	  else {
+	    setError("Symbols after # cannot exceed 50 characters in length.", NULL, 0);
+	    return 1;
+	  }
 	}
       }
       else {
@@ -154,14 +157,14 @@ int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIn
       }
     }
     else {
-      if(*stringIndex < BUFFERSIZE)
-	*(string + *stringIndex) = '\0';
+      if(stringIndex < BUFFERSIZE)
+	buffer[stringIndex] = '\0';
       else {
 	setError("Symbols after # cannot exceed 50 characters in length.", NULL, 0);
 	return 1;
       }
-      addBranch(tree, makeSharp(string));
-      *stringIndex = 0;
+      addBranch(tree, makeSharp(buffer));
+      stringIndex = 0;
       *st = reading;
     }
     break;
@@ -181,6 +184,7 @@ int parse(struct ast **tree, char lchar, char pchar, char *string, int *stringIn
     }
     break;
   }
+  return 0;
 }
 
 int isNumber(char *string) {
@@ -194,9 +198,9 @@ int isNumber(char *string) {
 	useDecimal = 1;
     }
     else if(!isdigit(c))
-      return 1;
+      return 0;
   }
-  return 0;
+  return 1;
 }
 
 struct ast *makeAST(struct lexeme l) {
@@ -279,6 +283,11 @@ struct lexeme makeDoubleQuote() {
 
 struct lexeme makeSubstring(char token) {
   struct lexeme val = makeLexeme(substring);
+  val.data = malloc(sizeof(char));
+  if(!(val.data)) {
+    memoryError();
+    return val;
+  }
   *(val.data) = token;
   return val;
 }
