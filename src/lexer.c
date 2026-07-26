@@ -217,23 +217,16 @@ void cleanAST(struct ast *tree) {
   }
 }
 
-/*void addBranch(struct ast **tree, struct lexeme leaf) {
+void addBranch(struct ast **tree, struct lexeme leaf) {
   if(!(*tree))
     *tree = makeAST(leaf);
   else {
     struct ast *current = *tree;
-    while(current) {
+    while(current->rest) {
       current = current->rest;
     }
-    current = makeAST(leaf);
+    current->rest = makeAST(leaf);
   }
-}*/
-
-void addBranch(struct ast **tree, struct lexeme leaf) {
-  if(!(*tree))
-    *tree = makeAST(leaf);
-  else
-    addBranch(&(**tree).rest, leaf);
 }
 
 struct lexeme makeLexeme(enum lexChars token) {
