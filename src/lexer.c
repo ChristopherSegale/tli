@@ -21,7 +21,7 @@ struct lexeme makeDoubleQuote();
 struct lexeme makeSubstring(char token);
 struct lexeme makeNumber(char *token);
 struct lexeme makeSymbol(char *token);
-struct ast *addBranch(struct ast *tree, struct lexeme leaf);
+void addBranch(struct ast *tree, struct lexeme leaf);
 int parse(struct ast *tree, char lchar, char pchar, char *string, int *stringIndex, enum state *st, int *pc, int *igq, int *isPipe);
 
 struct ast *read(char *expression) {
@@ -206,18 +206,24 @@ struct ast *makeAST(struct lexeme l) {
 }
 
 void cleanAST(struct ast *tree) {
-  for(struct ast *current = tree, *next = tree->rest; current; current = next, next = current->rest) {
+  struct ast *next;
+  for(struct ast *current = tree; current; current = next) {
+    next = current->rest;
     cleanLexeme(current->leaf);
     free(current);
   }
 }
 
-struct ast *addBranch(struct ast *tree, struct lexeme leaf) {
-  struct ast *current = tree;
-  while(current) {
-    current = current->rest;
+void addBranch(struct ast *tree, struct lexeme leaf) {
+  if(!tree)
+    tree = makeAST(leaf);
+  else {
+    struct ast *current = tree;
+    while(current) {
+      current = current->rest;
+    }
+    current->rest = makeAST(leaf);
   }
-  current->rest = makeAST(leaf);
 }
 
 struct lexeme makeLexeme(enum lexChars token) {

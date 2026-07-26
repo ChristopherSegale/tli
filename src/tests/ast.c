@@ -48,7 +48,8 @@ void printAST(struct ast *tree) {
 }
 
 int main(int argc, char *argv[]) {
-  struct ast *a = read("(defun ()\n  (write \"Hello World!\"))");
+  //struct ast *a = read("(defun ()\n  (write \"Hello World!\"))");
+  struct ast *a = read("(");
   printAST(a);
   return 0;
 }

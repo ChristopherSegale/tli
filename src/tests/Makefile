@@ -11,4 +11,4 @@ ast.o:
 	$(CC) $(CFLAGS) ast.c -o ast.o
 
 clean:
-	$(RM) -f *.o ast
+	$(RM) *.o ast
