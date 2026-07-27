@@ -32,6 +32,7 @@ struct ast *read(char *expression) {
   struct ast *tree = NULL;
   int i = 0, pairCount = 0, igq = 0, isPipe = 0;
   enum state st = reading;
+  stringIndex = 0;
   for(int c = *(expression + i), p = *(expression + i + 1); i < size; i++, c = *(expression + i)) {
     int fail = parse(&tree, c, p, &st, &pairCount, &igq, &isPipe);
     if(fail) {
@@ -48,6 +49,10 @@ struct ast *read(char *expression) {
       addBranch(&tree, makeNumber(buffer));
     else
       addBranch(&tree, makeSymbol(buffer));
+  }
+  else if(st == hashCollect) {
+    buffer[stringIndex] = '\0';
+    addBranch(&tree, makeSharp(buffer));
   }
   return tree;
 }
