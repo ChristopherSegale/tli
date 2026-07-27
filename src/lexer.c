@@ -43,6 +43,7 @@ struct ast *read(char *expression) {
       p = *(expression + i + 2);
   }
   if(st == collect) {
+    buffer[stringIndex] = '\0';
     if(isNumber(buffer))
       addBranch(&tree, makeNumber(buffer));
     else
