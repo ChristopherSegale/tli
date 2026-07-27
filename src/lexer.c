@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h>
 #include "lexer.h"
 #include "error.h"
 
@@ -24,14 +25,14 @@ struct lexeme makeSubstring(char token);
 struct lexeme makeNumber(char *token);
 struct lexeme makeSymbol(char *token);
 void addBranch(struct ast **tree, struct lexeme leaf);
-int parse(struct ast **tree, char lchar, char pchar, enum state *st, int *pc, int *igq, int *isPipe);
+int parse(struct ast **tree, int lchar, int pchar, enum state *st, int *pc, int *igq, int *isPipe);
 
 struct ast *read(char *expression) {
   int size = strlen(expression);
   struct ast *tree = NULL;
   int i = 0, pairCount = 0, igq = 0, isPipe = 0;
   enum state st = reading;
-  for(char c = *(expression + i), p = *(expression + i + 1); i < size; i++, c = *(expression + i)) {
+  for(int c = *(expression + i), p = *(expression + i + 1); i < size; i++, c = *(expression + i)) {
     int fail = parse(&tree, c, p, &st, &pairCount, &igq, &isPipe);
     if(fail) {
       cleanAST(tree);
@@ -41,10 +42,16 @@ struct ast *read(char *expression) {
     if(i < (size - 2))
       p = *(expression + i + 2);
   }
+  if(st == collect) {
+    if(isNumber(buffer))
+      addBranch(&tree, makeNumber(buffer));
+    else
+      addBranch(&tree, makeSymbol(buffer));
+  }
   return tree;
 }
 
-int parse(struct ast **tree, char lchar, char pchar, enum state *st, int *pc, int *igq, int *isPipe) {
+int parse(struct ast **tree, int lchar, int pchar, enum state *st, int *pc, int *igq, int *isPipe) {
   switch (*st) {
   case reading:
     if(lchar == '(') {
@@ -115,6 +122,21 @@ int parse(struct ast **tree, char lchar, char pchar, enum state *st, int *pc, in
       else {
 	setError("Symbols cannot exceed 50 characters in length.", NULL, 0);
 	return 1;
+      }
+      if(lchar == ')' || lchar == EOF) {
+	if(stringIndex < (BUFFERSIZE - 1)) {
+	  buffer[stringIndex] = '\0';
+	  if(isNumber(buffer))
+	    addBranch(tree, makeNumber(buffer));
+	  else
+	    addBranch(tree, makeSymbol(buffer));
+	  stringIndex = 0;
+	  *st = reading;
+	}
+	else {
+	  memoryError();
+	  return 1;
+	}
       }
     }
     else {

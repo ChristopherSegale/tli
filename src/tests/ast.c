@@ -55,7 +55,7 @@ void printAST(struct ast *tree) {
 
 int main(int argc, char *argv[]) {
   //char *test = "\"hello\" ( \" World!\"";
-  char *test = ";;;Hello World Program\n(defun hello ()\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n'finished ";
+  char *test = ";;;Hello World Program\n(defun hello ()\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n'finished";
   struct ast *a = read(test);
   printf("Running the following expression through the AST printer:\n%s\n", test);
   printAST(a);
