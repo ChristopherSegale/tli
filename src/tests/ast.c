@@ -53,11 +53,25 @@ void printAST(struct ast *tree) {
   }
 }
 
+void runLexerTests(char *t[], int size) {
+  for(int i = 0; i < size; i++) {
+    printf("Running test %d:\n", i + 1);
+    struct ast *a = read(t[i]);
+    if(a)
+      printAST(a);
+  }
+}
+
 int main(int argc, char *argv[]) {
   //char *test = "\"hello\" ( \" World!\"";
-  char *test = ";;;Hello World Program\n(defun hello ()\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n#'finished";
-  struct ast *a = read(test);
-  printf("Running the following expression through the AST printer:\n%s\n", test);
-  printAST(a);
+  char *tests[] = {
+    ";;;Hello World Program\n(((defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n`',finished", //Too many left-parantheses
+    ";;;Hello World Program\n(defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))))\n`',finished", //Too many right-parantheses
+    ";;;Hello World Program\n(defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n`', finished",  //Space after comma
+    ";;;Hello World Program\n(defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n#('a 'b 'c",    //Too many left-parantheses with sharp 
+    ";;;Hello World Program\n(defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n`',finished",   //Success
+    ";;;Hello World Program\n(defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n#('a 'b 'c)"    //Success with sharp balanced
+  };
+  runLexerTests(tests, sizeof(tests) / sizeof(tests[0]));
   return 0;
 }
