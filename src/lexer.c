@@ -234,8 +234,7 @@ struct ast *makeAST(struct lexeme l) {
 }
 
 void cleanAST(struct ast *tree) {
-  struct ast *next;
-  for(struct ast *current = tree; current; current = next) {
+  for(struct ast *current = tree, *next; current; current = next) {
     next = current->rest;
     cleanLexeme(current->leaf);
     free(current);
