@@ -34,7 +34,17 @@ struct ast *read(char *expression) {
     buffer[stringIndex] = '\0';
     addBranch(&tree, makeSharp(buffer));
   }
-  return tree;
+  if(pairCount != 0) {
+    if(pairCount > 0)
+      setError("Unbalanced parantheses: Not enough right-side parantheses.", NULL, 0);
+    else
+      setError("Unbalanced parantheses: Too many right-side parantheses.", NULL, 0);
+    printError();
+    cleanAST(tree);
+    return NULL;
+  }
+  else
+    return tree;
 }
 
 int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st, int *stringIndex, int *pc, int *igq, int *isPipe) {
@@ -42,11 +52,11 @@ int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st,
   case reading:
     if(lchar == '(') {
       addBranch(tree, makeLP());
-      *(pc)++;
+      (*pc)++;
     }
     else if(lchar == ')') {
       addBranch(tree, makeRP());
-      *(pc)--;
+      (*pc)--;
     }
     else if(lchar == '"') {
       addBranch(tree, makeDoubleQuote());
@@ -101,15 +111,7 @@ int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st,
     break;
   case collect:
     if(!isspace(lchar)) {
-      if(*stringIndex < (BUFFERSIZE - 1)) {
-	*(buffer + *stringIndex) = lchar;
-	(*stringIndex)++;
-      }
-      else {
-	setError("Symbols cannot exceed 50 characters in length.", NULL, 0);
-	return 1;
-      }
-      if(lchar == ')' || lchar == EOF) {
+      if(lchar == ')') {
 	if(*stringIndex < (BUFFERSIZE - 1)) {
 	  *(buffer + *stringIndex) = '\0';
 	  if(isNumber(buffer))
@@ -118,11 +120,21 @@ int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st,
 	    addBranch(tree, makeSymbol(buffer));
 	  *stringIndex = 0;
 	  *st = reading;
+	  addBranch(tree, makeRP());
+	  (*pc)--;
 	}
 	else {
 	  memoryError();
 	  return 1;
 	}
+      }
+      else if(*stringIndex < (BUFFERSIZE - 1)) {
+	*(buffer + *stringIndex) = lchar;
+	(*stringIndex)++;
+      }
+      else {
+	setError("Symbols cannot exceed 50 characters in length.", NULL, 0);
+	return 1;
       }
     }
     else {
@@ -150,7 +162,7 @@ int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st,
 	    *(buffer + *stringIndex) = '\0';
 	    addBranch(tree, makeSharp(buffer));
 	    *stringIndex = 0;
-	    *(pc)++;
+	    (*pc)++;
 	    *st = reading;
 	  }
 	  else {
@@ -245,11 +257,12 @@ void addBranch(struct ast **tree, struct lexeme leaf) {
 struct lexeme makeLexeme(enum lexChars token) {
   struct lexeme val;
   val.lexType = token;
+  val.data = NULL;
   return val;
 }
 
 void cleanLexeme(struct lexeme l) {
-  if(l.lexType == sharp || l.lexType == substring || l.lexType == number || l.lexType == symbol)
+  if((l.lexType == sharp || l.lexType == substring || l.lexType == number || l.lexType == symbol) && l.data)
     free(l.data);
 }
 
