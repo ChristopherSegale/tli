@@ -1,7 +1,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-enum lexChars { lp, rp, sharp, quote, backQuote, comma, doubleQuote, substring, number, symbol };
+enum lexChars { lp, rp, sharp, quote, backQuote, comma, dot, doubleQuote, substring, number, symbol };
 
 struct lexeme {
   enum lexChars lexType;

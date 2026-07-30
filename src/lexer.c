@@ -83,6 +83,14 @@ int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st,
     }
     else if(lchar == '\'')
       addBranch(tree, makeQuote());
+    else if(lchar == '.') {
+      if(*pc > 0)
+	addBranch(tree, makeDot());
+      else {
+	setError("The '.' symbol must be placed in a list", NULL, 0);
+	return 1;
+      }
+    }
     else if(isspace(lchar)) {
     }
     else {
@@ -295,6 +303,10 @@ struct lexeme makeBackQuote() {
 
 struct lexeme makeComma() {
   return makeLexeme(comma);
+}
+
+struct lexeme makeDot() {
+  return makeLexeme(dot);
 }
 
 struct lexeme makeDoubleQuote() {

@@ -14,6 +14,7 @@ struct lexeme makeSharp(char *token);
 struct lexeme makeQuote();
 struct lexeme makeBackQuote();
 struct lexeme makeComma();
+struct lexeme makeDot();
 struct lexeme makeDoubleQuote();
 struct lexeme makeSubstring(char token);
 struct lexeme makeNumber(char *token);
