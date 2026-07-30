@@ -3,7 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "../lexer.h"
-#include "../error.h"
 
 void printLexeme(struct lexeme l) {
   switch (l.lexType) {
