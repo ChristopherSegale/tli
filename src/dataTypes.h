@@ -1,7 +1,7 @@
 #ifndef DATATYPES_H
 #define DATATYPES_H
 
-enum dataType { t, nil, integer, decimal, array, structure, cons, list, function, symbol };
+enum dataType { t, nil, byte, integer, decimal, array, string, structure, cons, list, function, symbol };
 
 struct TLObject {
   enum dataType;
