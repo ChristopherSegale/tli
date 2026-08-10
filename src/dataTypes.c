@@ -1,12 +1,10 @@
 #include <stdlib.h>
 #include "dataTypes.h"
 
-struct TLObject *makeObject(enum dataType d, int *fail) {
+struct TLObject *makeObject(enum dataType d) {
   struct TLObject *obj = malloc(sizeof(struct TLObject));
-  if(!obj) {
-    *fail = 1;
+  if(!obj)
     return NULL;
-  }
   obj->dt = d;
   return obj;
 }

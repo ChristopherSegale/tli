@@ -9,7 +9,7 @@ struct TLObject {
   void *value;
 };
 
-struct TLObject *makeObject(enum dataType d, int *fail);
+struct TLObject *makeObject(enum dataType d);
 int initValue(struct TLObject **obj, enum dataType);
 int assignByte(struct TLObject **obj, uint8_t value);
 int assignInteger(struct TLObject **obj, int value);
