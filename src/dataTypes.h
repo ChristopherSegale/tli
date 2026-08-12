@@ -6,11 +6,11 @@ enum dataType { DataT, DataNil, DataByte, DataInteger, DataDecimal, DataArray, D
 
 struct TLObject {
   enum dataType dt;
-  void *value;
+  void *data;
 };
 
 struct TLObject *makeObject(enum dataType d);
-int initValue(struct TLObject **obj, enum dataType);
+int initValue(struct TLObject **obj, enum dataType d);
 int assignByte(struct TLObject **obj, uint8_t value);
 int assignInteger(struct TLObject **obj, int value);
 int assignDecimal(struct TLObject **obj, double value);
