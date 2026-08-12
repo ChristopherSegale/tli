@@ -40,6 +40,7 @@ int initValue(struct TLObject **obj, enum dataType d) {
     break;
   default:
     (**obj).data = NULL;
+    break;
   }
   return 1;
 }
