@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include "util.h"
 #include "dataTypes.h"
 #include "error.h"
@@ -37,5 +38,37 @@ int initValue(struct TLObject **obj, enum dataType d) {
     (**obj).data = NULL;
     break;
   }
+  return 1;
+}
+
+int assignByte(struct TLObject **obj, uint8_t value) {
+  if(!(**obj).data)
+    return 0;
+  *(uint8_t *)((**obj).data) = value;
+  return 1;
+}
+
+
+int assignInteger(struct TLObject **obj, int value) {
+  if(!(**obj).data)
+    return 0;
+  *(int *)((**obj).data) = value;
+  return 1;
+}
+
+int assignDecimal(struct TLObject **obj, double value) {
+  if(!(**obj).data)
+    return 0;
+  *(double *)((**obj).data) = value;
+  return 1;
+}
+
+int assignSymbol(struct TLObject **obj, const char *value) {
+  if((**obj).data) {
+    setError("TLObject data is not NULL.", NULL, 0);
+    return 0;
+  }
+  (**obj).data = malloc(sizeof(char) * (strlen(value) + 1));
+  strcpy((char *)((**obj).data), value);
   return 1;
 }

@@ -20,7 +20,7 @@ int assignStructure(struct TLObject **obj, struct TLStruct *value);
 int assignCons(struct TLObject **obj, struct TLCons *value);
 int assignList(struct TLObject **obj, struct TLList *value);
 int assignFunction(struct TLObject **obj, struct TLFunc *value);
-int assignSymbol(struct TLObject **obj, char *value);
+int assignSymbol(struct TLObject **obj, const char *value);
 void cleanTLObject(struct TLObject **obj);
 
 #endif
