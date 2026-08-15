@@ -69,6 +69,7 @@ int assignSymbol(struct TLObject **obj, const char *value) {
     return 0;
   }
   (**obj).data = malloc(sizeof(char) * (strlen(value) + 1));
+  checkNullInit((**obj).data);
   strcpy((char *)((**obj).data), value);
   return 1;
 }
