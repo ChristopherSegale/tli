@@ -1,13 +1,8 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include "util.h"
 #include "dataTypes.h"
 #include "error.h"
-
-void checkNullInit(void *p) {
-  if(!p) {
-    memoryError();
-  }
-}
 
 struct TLObject *makeObject(enum dataType d) {
   struct TLObject *obj = malloc(sizeof(struct TLObject));

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "util.h"
+#include "error.h"
 
 int isNumber(const char *string) {
   int useDecimal = 0;
@@ -20,4 +21,10 @@ int isNumber(const char *string) {
     }
   }
   return 1;
+}
+
+void checkNullInit(void *p) {
+  if(!p) {
+    memoryError();
+  }
 }
