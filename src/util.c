@@ -2,7 +2,7 @@
 #include <ctype.h>
 #include "util.h"
 
-int isNumber(char *string) {
+int isNumber(const char *string) {
   int useDecimal = 0;
   for(int i = 0; i < strlen(string); i++) {
     char c = *(string + i);

@@ -16,6 +16,6 @@ struct ast {
 struct ast *makeAST(struct lexeme l);
 void cleanAST(struct ast *tree);
 void cleanLexeme(struct lexeme l);
-struct ast *read(char *expression); 
+struct ast *read(const char *expression); 
 
 #endif

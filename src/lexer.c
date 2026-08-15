@@ -6,7 +6,7 @@
 #include "error.h"
 #include "lexHelper.h"
 
-struct ast *read(char *expression) {
+struct ast *read(const char *expression) {
   int size = strlen(expression);
   struct ast *tree = NULL;
   int i = 0, pairCount = 0, igq = 0, isPipe = 0;
@@ -272,7 +272,7 @@ struct lexeme makeRP() {
   return makeLexeme(rp);
 }
 
-struct lexeme makeSharp(char *token) {
+struct lexeme makeSharp(const char *token) {
   struct lexeme val = makeLexeme(sharp);
   int size = strlen(token);
   val.data = malloc(sizeof(char) * (size + 1));
@@ -315,7 +315,7 @@ struct lexeme makeSubstring(char token) {
   return val;
 }
 
-struct lexeme makeNumber(char *token) {
+struct lexeme makeNumber(const char *token) {
   struct lexeme val = makeLexeme(number);
   int size = strlen(token);
   val.data = malloc(sizeof(char) * (size + 1));
@@ -327,7 +327,7 @@ struct lexeme makeNumber(char *token) {
   return val;
 }
 
-struct lexeme makeSymbol(char *token) {
+struct lexeme makeSymbol(const char *token) {
   struct lexeme val = makeLexeme(symbol);
   int size = strlen(token);
   val.data = malloc(sizeof(char) * (size + 1));
