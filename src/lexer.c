@@ -276,10 +276,7 @@ struct lexeme makeSharp(const char *token) {
   struct lexeme val = makeLexeme(sharp);
   int size = strlen(token);
   val.data = malloc(sizeof(char) * (size + 1));
-  if(!(val.data)) {
-    memoryError();
-    return val;
-  }
+  checkNullInit(val.data);
   strcpy(val.data, token);
   return val;
 }
@@ -307,10 +304,7 @@ struct lexeme makeDoubleQuote() {
 struct lexeme makeSubstring(char token) {
   struct lexeme val = makeLexeme(substring);
   val.data = malloc(sizeof(char));
-  if(!(val.data)) {
-    memoryError();
-    return val;
-  }
+  checkNullInit(val.data);
   *(val.data) = token;
   return val;
 }
@@ -319,10 +313,7 @@ struct lexeme makeNumber(const char *token) {
   struct lexeme val = makeLexeme(number);
   int size = strlen(token);
   val.data = malloc(sizeof(char) * (size + 1));
-  if (!(val.data)) {
-    memoryError();
-    return val;
-  }
+  checkNullInit(val.data);
   strcpy(val.data, token);
   return val;
 }
@@ -331,10 +322,7 @@ struct lexeme makeSymbol(const char *token) {
   struct lexeme val = makeLexeme(symbol);
   int size = strlen(token);
   val.data = malloc(sizeof(char) * (size + 1));
-  if (!(val.data)) {
-    memoryError();
-    return val;
-  }
+  checkNullInit(val.data);
   strcpy(val.data, token);
   return val;
 }
