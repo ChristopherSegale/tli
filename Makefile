@@ -2,7 +2,7 @@ CFLAGS=-std=c99 -pedantic -c
 SRC=src
 BIN=tli
 OBJ=obj
-OBJS=$(OBJ)/main.o $(OBJ)/error.o $(OBJ)/argParse.o $(OBJ)/parseType.o $(OBJ)/lexer.o $(OBJ)/dataTypes.o
+OBJS=$(OBJ)/main.o $(OBJ)/util.o $(OBJ)/error.o $(OBJ)/argParse.o $(OBJ)/parseType.o $(OBJ)/lexer.o $(OBJ)/dataTypes.o
 BINDIR=bin
 PREFIX=/usr/local
 
@@ -10,11 +10,14 @@ install: all
 	mkdir -p $(PREFIX)/bin
 	cp $(BINDIR)/$(BIN) $(PREFIX)/bin
 
-all: $(BINDIR) main.o error.o argParse.o parseType.o lexer.o dataTypes.o
+all: $(BINDIR) main.o util.o error.o argParse.o parseType.o lexer.o dataTypes.o
 	$(CC) $(OBJS) -o $(BINDIR)/$(BIN)
 
 main.o: $(OBJ)
 	$(CC) $(CFLAGS) $(SRC)/main.c -o $(OBJ)/main.o
+
+util.o: $(OBJ)
+	$(CC) $(CFLAGS) $(SRC)/util.c -o $(OBJ)/util.o
 
 error.o: $(OBJ)
 	$(CC) $(CFLAGS) $(SRC)/error.c -o $(OBJ)/error.o

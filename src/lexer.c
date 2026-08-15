@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "util.h"
 #include "lexer.h"
 #include "error.h"
 #include "lexHelper.h"
@@ -83,11 +84,18 @@ int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st,
     else if(lchar == '\'')
       addBranch(tree, makeQuote());
     else if(lchar == '.') {
-      if(*pc > 0)
-	addBranch(tree, makeDot());
+      if(pchar == ' ') {
+	if(*pc > 0)
+	  addBranch(tree, makeDot());
+	else {
+	  setError("The '.' symbol must be placed in a list", NULL, 0);
+	  return 1;
+	}
+      }
       else {
-	setError("The '.' symbol must be placed in a list", NULL, 0);
-	return 1;
+	*(buffer + *stringIndex) = lchar;
+	(*stringIndex)++;
+	*st = collect;
       }
     }
     else if(isspace(lchar)) {
@@ -212,22 +220,6 @@ int parse(struct ast **tree, char *buffer, int lchar, int pchar, enum state *st,
     break;
   }
   return 0;
-}
-
-int isNumber(char *string) {
-  int useDecimal = 0;
-  for(int i = 0; i < strlen(string); i++) {
-    char c = *(string + i);
-    if (c == '.') {
-      if(useDecimal)
-	return 1;
-      else
-	useDecimal = 1;
-    }
-    else if(!isdigit(c))
-      return 0;
-  }
-  return 1;
 }
 
 struct ast *makeAST(struct lexeme l) {

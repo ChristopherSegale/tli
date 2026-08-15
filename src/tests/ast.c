@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
     ").)",                                                                                                                                                                        //Dot in unbalanced list
     ";;;Hello World Program\n(defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n`',finished",   //Success
     ";;;Hello World Program\n(defun hello ()\n  #|\n  This is a comment.\n  (format t \"Hello World!~%\")\n  |#\n  (funcall #'write \"Hello \" 1 \"st World!\"))\n#('a 'b 'c)",   //Success with sharp balanced
-    "'(a . b)"                                                                                                                                                                    //Success with dotted pair
+    "'(a . -.17.5)"                                                                                                                                                               //Success with dotted pair
   };
   runLexerTests(tests, sizeof(tests) / sizeof(tests[0]));
   return 0;
