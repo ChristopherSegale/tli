@@ -5,71 +5,58 @@
 #include "dataTypes.h"
 #include "error.h"
 
-struct TLObject *makeObject(enum dataType d) {
+struct TLObject *makeObject(enum dataType d, void *value) {
   struct TLObject *obj = malloc(sizeof(struct TLObject));
   if(!obj)
     return NULL;
   obj->dt = d;
+  switch (d) {
+  case DataByte:
+    (*obj).data = malloc(sizeof(uint8_t));
+    checkNullInit((*obj).data);
+    if(!value) {
+      *(uint8_t *)((*obj).data) = 0;
+    }
+    else
+      *(uint8_t *)((*obj).data) = *(uint8_t *)value;
+    break;
+  case DataInteger:
+    (*obj).data = malloc(sizeof(int));
+    checkNullInit((*obj).data);
+    if(!value)
+      *(uint8_t *)((*obj).data) = 0;
+    else
+      *(uint8_t *)((*obj).data) = *(int *)value;
+    break;
+  case DataDecimal:
+    (*obj).data = malloc(sizeof(double));
+    checkNullInit((*obj).data);
+    if(!value)
+      *(double *)((*obj).data) = *(double *)value;
+    break;
+  case DataSymbol:
+    if(!value) {
+      setError("Symbol value must be given for for the symbol data type.", NULL, 0);
+      free(obj);
+      return NULL;
+    }
+    else {
+      (*obj).data = malloc(sizeof(char) * (strlen(value) + 1));
+      checkNullInit((*obj).data);
+      strcpy((char *)((*obj).data), value);
+    }
+    break;
+  default:
+    obj->data = NULL;
+    break;
+  }
   return obj;
 }
 
-int initValue(struct TLObject **obj, enum dataType d) {
-  if(!(*obj)) {
-    setError("Given null TLObject to initialize.", NULL, 0);
-    return 0;
+void cleanTLObject(struct TLObject **obj) {
+  if(*obj) {
+    if(!((**obj).data))
+      free((**obj).data);
+    free(*obj);
   }
-  switch (d) {
-  case DataByte:
-    (**obj).data = malloc(sizeof(uint8_t));
-    checkNullInit((**obj).data);
-    *(uint8_t *)((**obj).data) = 0;
-    break;
-  case DataInteger:
-    (**obj).data = malloc(sizeof(int));
-    checkNullInit((**obj).data);
-    *(int *)((**obj).data) = 0;
-    break;
-  case DataDecimal:
-    (**obj).data = malloc(sizeof(double));
-    checkNullInit((**obj).data);
-    *(double *)((**obj).data) = 0.0;
-    break;
-  default:
-    (**obj).data = NULL;
-    break;
-  }
-  return 1;
-}
-
-int assignByte(struct TLObject **obj, uint8_t value) {
-  if(!(**obj).data)
-    return 0;
-  *(uint8_t *)((**obj).data) = value;
-  return 1;
-}
-
-
-int assignInteger(struct TLObject **obj, int value) {
-  if(!(**obj).data)
-    return 0;
-  *(int *)((**obj).data) = value;
-  return 1;
-}
-
-int assignDecimal(struct TLObject **obj, double value) {
-  if(!(**obj).data)
-    return 0;
-  *(double *)((**obj).data) = value;
-  return 1;
-}
-
-int assignSymbol(struct TLObject **obj, const char *value) {
-  if((**obj).data) {
-    setError("TLObject data is not NULL.", NULL, 0);
-    return 0;
-  }
-  (**obj).data = malloc(sizeof(char) * (strlen(value) + 1));
-  checkNullInit((**obj).data);
-  strcpy((char *)((**obj).data), value);
-  return 1;
 }
