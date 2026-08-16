@@ -43,7 +43,7 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     else {
       (*obj).data = malloc(sizeof(char) * (strlen(value) + 1));
       checkNullInit((*obj).data);
-      strcpy((char *)((*obj).data), value);
+      strcpy((char *)((*obj).data), (char *)value);
     }
     break;
   default:
