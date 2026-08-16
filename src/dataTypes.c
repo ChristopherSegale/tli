@@ -41,7 +41,7 @@ struct TLObject *makeObject(enum dataType d, void *value) {
       return NULL;
     }
     else {
-      (*obj).data = malloc(sizeof(char) * (strlen(value) + 1));
+      (*obj).data = malloc(sizeof(char) * (strlen((char *)value) + 1));
       checkNullInit((*obj).data);
       strcpy((char *)((*obj).data), (char *)value);
     }
