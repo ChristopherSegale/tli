@@ -32,6 +32,8 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     (*obj).data = malloc(sizeof(double));
     checkNullInit((*obj).data);
     if(!value)
+      *(double *)((*obj).data) = 0.0;
+    else
       *(double *)((*obj).data) = *(double *)value;
     break;
   case DataSymbol:
