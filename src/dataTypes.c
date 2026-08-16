@@ -121,6 +121,51 @@ int changeDecimal(struct TLObject **obj, double value) {
   return 1;
 }
 
+uint8_t getByte(struct TLObject *obj, int *fail) {
+  if(obj) {
+    if(obj->dt == DataByte && obj->data)
+      return *(uint8_t *)(obj->data);
+    else {
+      *fail = 1;
+      return 0;
+    }
+  }
+  else {
+    *fail = 1;
+    return 0;
+  }
+}
+
+int getInteger(struct TLObject *obj, int *fail) {
+  if(obj) {
+    if(obj->dt == DataInteger && obj->data)
+      return *(int *)(obj->data);
+    else {
+      *fail = 1;
+      return 0;
+    }
+  }
+  else {
+    *fail = 1;
+    return 0;
+  }
+}
+
+double getDecimal(struct TLObject *obj, int *fail) {
+  if(obj) {
+    if(obj->dt == DataDecimal && obj->data)
+      return *(double *)(obj->data);
+    else {
+      *fail = 1;
+      return 0;
+    }
+  }
+  else {
+    *fail = 1;
+    return 0;
+  }
+}
+
 void cleanTLObject(struct TLObject **obj) {
   if(*obj) {
     if(!((**obj).data))
