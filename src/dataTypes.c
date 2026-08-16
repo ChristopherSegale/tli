@@ -53,6 +53,72 @@ struct TLObject *makeObject(enum dataType d, void *value) {
   return obj;
 }
 
+int changeByte(struct TLObject **obj, uint8_t value) {
+  if(*obj) {
+    if((**obj).data) {
+      if((**obj).dt == DataByte)
+	*(uint8_t *)((**obj).data) = value;
+      else {
+	setError("TLObject isn't of the byte type.", NULL, 0);
+	return 0;
+      }
+    }
+    else {
+      setError("The data field on TLObject is NULL.", NULL, 0);
+      return 0;
+    }
+  }
+  else {
+    setError("Null TLObject pointer given to changeByte function.", NULL, 0);
+    return 0;
+  }
+  return 1;
+}
+
+int changeInteger(struct TLObject **obj, int value) {
+  if(*obj) {
+    if((**obj).data) {
+      if((**obj).dt == DataInteger)
+	*(int *)((**obj).data) = value;
+      else {
+	setError("TLObject isn't of the integer type.", NULL, 0);
+	return 0;
+      }
+    }
+    else {
+      setError("The data field on TLObject is NULL.", NULL, 0);
+      return 0;
+    }
+  }
+  else {
+    setError("Null TLObject pointer given to changeInteger function.", NULL, 0);
+    return 0;
+  }
+  return 1;
+}
+
+int changeDecimal(struct TLObject **obj, double value) {
+  if(*obj) {
+    if((**obj).data) {
+      if((**obj).dt == DataDecimal)
+	*(double *)((**obj).data) = value;
+      else {
+	setError("TLObject isn't of the decimal type.", NULL, 0);
+	return 0;
+      }
+    }
+    else {
+      setError("The data field on TLObject is NULL.", NULL, 0);
+      return 0;
+    }
+  }
+  else {
+    setError("Null TLObject pointer given to changeDecimal function.", NULL, 0);
+    return 0;
+  }
+  return 1;
+}
+
 void cleanTLObject(struct TLObject **obj) {
   if(*obj) {
     if(!((**obj).data))

@@ -10,6 +10,9 @@ struct TLObject {
 };
 
 struct TLObject *makeObject(enum dataType d, void *value);
+int changeByte(struct TLObject **obj, uint8_t value);
+int changeInteger(struct TLObject **obj, int value);
+int changeDecimal(struct TLObject **obj, double value);
 int assignArray(struct TLObject **obj, struct TLArray *value);
 int assignString(struct TLObject **obj, char *string);
 int assignStructure(struct TLObject **obj, struct TLStruct *value);
