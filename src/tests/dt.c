@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "testUtil.h"
 #include "../error.h"
 #include "../dataTypes.h"
 
@@ -13,15 +14,6 @@ int intTest(int a, int b) {
 
 int decTest(double a, double b) {
   return a == b;
-}
-
-void printTest(int testNumber, int test) {
-  char *result;
-  if(test)
-    result = "PASSED";
-  else
-    result = "FAILED";
-  printf("Test %d: %s\n", testNumber, result);
 }
 
 void checkFail(int fail) {
