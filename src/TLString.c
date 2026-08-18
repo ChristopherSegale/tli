@@ -58,7 +58,7 @@ struct TLString TLSubstring(struct TLString s, int start, int end, int *fail) {
   if(s.string) {
     if(start < end && start >= 0 && end < s.size) {
       if(end - start > 1) {
-	uint8_t *buffer = malloc(sizeof(uint8_t) * (end - start));
+	uint8_t *buffer = malloc(sizeof(uint8_t) * ((end - start) +1));
 	for(int i = 0, j = start; j <= end; i++, j++)
 	  *(buffer + i) = *(s.string + j);
 	val = makeTLString(buffer, (end - start) + 1);
