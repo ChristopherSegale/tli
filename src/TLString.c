@@ -85,3 +85,10 @@ struct TLString TLSubstring(struct TLString s, int start, int end, int *fail) {
   }
   return val;
 }
+
+void cleanTLString(struct TLString *s) {
+  if(s) {
+    if(s->string)
+      free(s->string);
+  }
+}

@@ -19,22 +19,22 @@ int main(int argc, char *argv[]) {
   printTest(tn++, getTLChar(t1, 0) == 'h');
   pushTLChar(&t1, 'w');
   printTest(tn++, getTLChar(t1, 1) == 'w');
-  free(t1.string);
+  cleanTLString(&t1);
 
   struct TLString t2 = makeTLString(s1, sizeof(s1) / sizeof(s1[0]));
   printTest(tn++, TLStringcmp(t2.string, s1, sizeof(s1) / sizeof(s1[0])));
   printTest(tn++, t2.size == sizeof(s1) / sizeof(s1[0]));
-  free(t2.string);
+  cleanTLString(&t2);
 
   struct TLString t3 = makeTLString(s2, sizeof(s2) / sizeof(s2[0]));
   struct TLString t4 = TLSubstring(t3, 8, 11, &fail);
-  free(t3.string);
+  cleanTLString(&t3);
   if(fail)
     printError();
   else {
     printTest(tn++, TLStringcmp(t4.string, s3, sizeof(s3) / sizeof(s3[0])));
     printTest(tn++, t4.size == sizeof(s3) / sizeof(s3[0]));
-    free(t4.string);
+    cleanTLString(&t4);
   }
   return 0;
 }
