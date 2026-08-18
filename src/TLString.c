@@ -58,9 +58,11 @@ struct TLString TLSubstring(struct TLString s, int start, int end, int *fail) {
   if(s.string) {
     if(start < end && start >= 0 && end < s.size) {
       if(end - start > 1) {
-	uint8_t buffer[end - start];
-	for(int i = 0, j = start; j < end; i++, j++)
-	  buffer[i] = *(s.string + j);
+	uint8_t *buffer = malloc(sizeof(uint8_t) * (end - start));
+	for(int i = 0, j = start; j <= end; i++, j++)
+	  *(buffer + i) = *(s.string + j);
+	val = makeTLString(buffer, (end - start) + 1);
+	free(buffer);
       }
       else {
 	setError("Difference between end and start needs to be greater than 1.", NULL, 0);

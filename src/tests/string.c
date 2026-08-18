@@ -27,12 +27,14 @@ int main(int argc, char *argv[]) {
   free(t2.string);
 
   struct TLString t3 = makeTLString(s2, sizeof(s2) / sizeof(s2[0]));
-  struct TLString t4 = TLSubstring(t3, 10, 11, &fail);
+  struct TLString t4 = TLSubstring(t3, 8, 11, &fail);
+  free(t3.string);
   if(fail)
     printError();
   else {
     printTest(tn++, TLStringcmp(t4.string, s3, sizeof(s3) / sizeof(s3[0])));
     printTest(tn++, t4.size == sizeof(s3) / sizeof(s3[0]));
+    free(t4.string);
   }
   return 0;
 }
