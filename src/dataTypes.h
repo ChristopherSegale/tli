@@ -9,6 +9,11 @@ struct TLObject {
   void *data;
 };
 
+struct TLCons {
+  struct TLObject *car;
+  struct TLObject *cdr;
+};
+
 struct TLObject *makeObject(enum dataType d, void *value);
 int changeByte(struct TLObject **obj, uint8_t value);
 int changeInteger(struct TLObject **obj, int value);
