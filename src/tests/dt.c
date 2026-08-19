@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "testUtil.h"
 #include "../error.h"
+#include "../TLString.h"
 #include "../dataTypes.h"
 
 int byteTest(uint8_t a, uint8_t b) {
@@ -61,6 +62,21 @@ int main(int argc, char *argv[]) {
   double c = 7.5;
   obj = makeObject(DataDecimal, &c);
   printTest(tn++, decTest(getDecimal(obj, &fail), 7.5));
+  cleanTLObject(&obj);
+
+  obj = makeObject(DataString, NULL);
+  struct TLString *d = (struct TLString *)obj->data;
+  printTest(tn++, !d->string);
+  printTest(tn++, intTest(d->size, 0));
+  cleanTLObject(&obj);
+
+  uint8_t e[] = {'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'};
+  struct TLString f = makeTLString(e, sizeof(e) / sizeof(e[0]));
+  obj = makeObject(DataString, &f);
+  d = (struct TLString *)obj->data;
+  printTest(tn++, TLStringcmp(d->string, e, sizeof(e) / sizeof(e[0])));
+  printTest(tn++, intTest(d->size, sizeof(e) / sizeof(e[0])));
+  cleanTLString(d);
   cleanTLObject(&obj);
 
   return 0;
