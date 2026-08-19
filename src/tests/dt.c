@@ -5,26 +5,6 @@
 #include "../TLString.h"
 #include "../dataTypes.h"
 
-int byteTest(uint8_t a, uint8_t b) {
-  return a == b;
-}
-
-int intTest(int a, int b) {
-  return a == b;
-}
-
-int decTest(double a, double b) {
-  return a == b;
-}
-
-void checkFail(int fail) {
-  if(fail) {
-    setError("Retrieving data failed.", NULL, 0);
-    printError();
-    exit(1);
-  }
-}
-
 int main(int argc, char *argv[]) {
   int tn = 1;
   int fail = 0;

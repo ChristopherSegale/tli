@@ -18,3 +18,15 @@ int TLStringcmp(uint8_t *a, uint8_t *b, int count) {
   }
   return 1;
 }
+
+int byteTest(uint8_t a, uint8_t b) {
+  return a == b;
+}
+
+int intTest(int a, int b) {
+  return a == b;
+}
+
+int decTest(double a, double b) {
+  return a == b;
+}
