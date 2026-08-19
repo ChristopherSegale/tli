@@ -177,6 +177,13 @@ double getDecimal(struct TLObject *obj, int *fail) {
   }
 }
 
+struct TLString *getTLString(struct TLObject *obj) {
+  if(obj && obj->dt == DataString && obj->data)
+    return (struct TLString *)(obj->data);
+  else
+    return NULL;
+}
+
 void cleanTLObject(struct TLObject **obj) {
   if(*obj) {
     if(!((**obj).data))

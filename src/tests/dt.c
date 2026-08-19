@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
   cleanTLObject(&obj);
 
   obj = makeObject(DataString, NULL);
-  struct TLString *d = (struct TLString *)obj->data;
+  struct TLString *d = getTLString(obj);
   printTest(tn++, !d->string);
   printTest(tn++, intTest(d->size, 0));
   cleanTLObject(&obj);
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
   uint8_t e[] = {'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'};
   struct TLString f = makeTLString(e, sizeof(e) / sizeof(e[0]));
   obj = makeObject(DataString, &f);
-  d = (struct TLString *)obj->data;
+  d = getTLString(obj);
   printTest(tn++, TLStringcmp(d->string, e, sizeof(e) / sizeof(e[0])));
   printTest(tn++, intTest(d->size, sizeof(e) / sizeof(e[0])));
   cleanTLString(d);
