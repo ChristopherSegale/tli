@@ -3,6 +3,7 @@
 #include <string.h>
 #include "util.h"
 #include "dataTypes.h"
+#include "TLString.h"
 #include "error.h"
 
 struct TLObject *makeObject(enum dataType d, void *value) {
@@ -35,6 +36,16 @@ struct TLObject *makeObject(enum dataType d, void *value) {
       *(double *)((*obj).data) = 0.0;
     else
       *(double *)((*obj).data) = *(double *)value;
+    break;
+  case DataString:
+    (*obj).data = malloc(sizeof(struct TLString));
+    checkNullInit((*obj).data);
+    if(value) {
+      *(struct TLString *)((*obj).data) = *(struct TLString *)value;
+    }
+    else {
+      *(struct TLString *)((*obj).data) = makeTLString(NULL, 0);
+    }
     break;
   case DataSymbol:
     if(!value) {

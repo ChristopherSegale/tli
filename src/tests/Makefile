@@ -17,7 +17,7 @@ string.o:
 	$(CC) $(CFLAGS) string.c -o string.o
 
 dt: dt.o testUtil.o
-	$(CC) dt.o testUtil.o $(OBJ)/util.o $(OBJ)/error.o $(OBJ)/dataTypes.o -o dt
+	$(CC) dt.o testUtil.o $(OBJ)/util.o $(OBJ)/error.o $(OBJ)/TLString.o $(OBJ)/dataTypes.o -o dt
 
 dt.o:
 	$(CC) $(CFLAGS) dt.c -o dt.o
