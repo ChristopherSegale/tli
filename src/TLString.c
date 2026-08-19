@@ -14,7 +14,7 @@ struct TLString makeTLString(uint8_t *string, int length) {
   else {
     val.string = malloc(sizeof(uint8_t) * length);
     checkNullInit(val.string);
-    memcpy(val.string, string, length);
+    memcpy(val.string, string, sizeof(uint8_t) * length);
     val.size = length;
   }
   return val;
@@ -57,17 +57,11 @@ struct TLString TLSubstring(struct TLString s, int start, int end, int *fail) {
   struct TLString val;
   if(s.string) {
     if(start < end && start >= 0 && end < s.size) {
-      if(end - start > 1) {
-	uint8_t *buffer = malloc(sizeof(uint8_t) * ((end - start) +1));
-	for(int i = 0, j = start; j <= end; i++, j++)
-	  *(buffer + i) = *(s.string + j);
-	val = makeTLString(buffer, (end - start) + 1);
-	free(buffer);
-      }
-      else {
-	setError("Difference between end and start needs to be greater than 1.", NULL, 0);
-	*fail = 1;
-      }
+      uint8_t *buffer = malloc(sizeof(uint8_t) * ((end - start) +1));
+      for(int i = 0, j = start; j <= end; i++, j++)
+	*(buffer + i) = *(s.string + j);
+      val = makeTLString(buffer, (end - start) + 1);
+      free(buffer);
     }
     else {
       if(start >= end)
