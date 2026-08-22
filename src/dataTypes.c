@@ -45,6 +45,9 @@ struct TLObject *makeObject(enum dataType d, void *value) {
       obj->data = makeTLString(NULL, 0);
     }
     break;
+  case DataCons:
+    obj->data = value;
+    break;
   case DataSymbol:
     if(!value) {
       setError("Symbol value must be given for for the symbol data type.", NULL, 0);
@@ -223,6 +226,16 @@ struct TLCons **getTLCons(struct TLObject *obj) {
     return (struct TLCons **)(&(obj->data));
   else
     return NULL;
+}
+
+void cleanTLCons(struct TLCons **cons) {
+  if(cons && *cons) {
+    if((**cons).car)
+      free((**cons).car);
+    if((**cons).cdr)
+      free((**cons).cdr);
+    free(*cons);
+  }
 }
 
 void cleanTLObject(struct TLObject **obj) {

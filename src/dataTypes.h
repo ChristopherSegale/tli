@@ -26,6 +26,7 @@ struct TLCons *createTLCons(struct TLObject *car, struct TLObject *cdr);
 struct TLObject **TLCar(struct TLCons **cons, int *fail);
 struct TLObject **TLCdr(struct TLCons **cons, int *fail);
 struct TLCons **getTLCons(struct TLObject *obj);
+void cleanTLCons(struct TLCons **cons);
 int assignArray(struct TLObject **obj, struct TLArray *value);
 int assignString(struct TLObject **obj, char *string);
 int assignStructure(struct TLObject **obj, struct TLStruct *value);
