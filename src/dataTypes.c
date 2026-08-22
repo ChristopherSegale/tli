@@ -13,36 +13,36 @@ struct TLObject *makeObject(enum dataType d, void *value) {
   obj->dt = d;
   switch (d) {
   case DataByte:
-    (*obj).data = malloc(sizeof(uint8_t));
-    checkNullInit((*obj).data);
+    obj->data = malloc(sizeof(uint8_t));
+    checkNullInit(obj->data);
     if(!value) {
-      *(uint8_t *)((*obj).data) = 0;
+      *(uint8_t *)(obj->data) = 0;
     }
     else
-      *(uint8_t *)((*obj).data) = *(uint8_t *)value;
+      *(uint8_t *)(obj->data) = *(uint8_t *)value;
     break;
   case DataInteger:
-    (*obj).data = malloc(sizeof(int));
-    checkNullInit((*obj).data);
+    obj->data = malloc(sizeof(int));
+    checkNullInit(obj->data);
     if(!value)
-      *(uint8_t *)((*obj).data) = 0;
+      *(uint8_t *)(obj->data) = 0;
     else
-      *(uint8_t *)((*obj).data) = *(int *)value;
+      *(uint8_t *)(obj->data) = *(int *)value;
     break;
   case DataDecimal:
-    (*obj).data = malloc(sizeof(double));
-    checkNullInit((*obj).data);
+    obj->data = malloc(sizeof(double));
+    checkNullInit(obj->data);
     if(!value)
-      *(double *)((*obj).data) = 0.0;
+      *(double *)(obj->data) = 0.0;
     else
-      *(double *)((*obj).data) = *(double *)value;
+      *(double *)(obj->data) = *(double *)value;
     break;
   case DataString:
     if(value) {
-      (*obj).data = value;
+      obj->data = value;
     }
     else {
-      (*obj).data = makeTLString(NULL, 0);
+      obj->data = makeTLString(NULL, 0);
     }
     break;
   case DataSymbol:
@@ -52,9 +52,9 @@ struct TLObject *makeObject(enum dataType d, void *value) {
       return NULL;
     }
     else {
-      (*obj).data = malloc(sizeof(char) * (strlen((char *)value) + 1));
-      checkNullInit((*obj).data);
-      strcpy((char *)((*obj).data), (char *)value);
+      obj->data = malloc(sizeof(char) * (strlen((char *)value) + 1));
+      checkNullInit(obj->data);
+      strcpy((char *)(obj->data), (char *)value);
     }
     break;
   default:
