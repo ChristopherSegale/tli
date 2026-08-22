@@ -182,6 +182,49 @@ struct TLString **getTLString(struct TLObject *obj) {
     return NULL;
 }
 
+struct TLCons *createTLCons(struct TLObject *car, struct TLObject *cdr) {
+  struct TLCons *val = malloc(sizeof(struct TLCons));
+  checkNullInit(val);
+  val->car = car;
+  val->cdr = cdr;
+  return val;
+}
+
+struct TLObject **TLCar(struct TLCons **cons, int *fail) {
+  if(cons) {
+    if(*cons) {
+      if((**cons).car)
+	return &((**cons).car);
+      else
+	return NULL;
+    }
+  }
+  setError("Null pointer given to 'TLCar' function.", NULL, 0);
+  *fail = 1;
+  return NULL;
+}
+
+struct TLObject **TLCdr(struct TLCons **cons, int *fail) {
+  if(cons) {
+    if(*cons) {
+      if((**cons).cdr)
+	return &((**cons).cdr);
+      else
+	return NULL;
+    }
+  }
+  setError("Null pointer given to 'TLCdr' function.", NULL, 0);
+  *fail = 1;
+  return NULL;
+}
+
+struct TLCons **getTLCons(struct TLObject *obj) {
+  if(obj && obj->dt == DataCons && obj->data)
+    return (struct TLCons **)(&(obj->data));
+  else
+    return NULL;
+}
+
 void cleanTLObject(struct TLObject **obj) {
   if(*obj) {
     if(!((**obj).data))
