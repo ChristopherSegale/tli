@@ -21,7 +21,7 @@ int changeDecimal(struct TLObject **obj, double value);
 uint8_t getByte(struct TLObject *obj, int *fail);
 int getInteger(struct TLObject *obj, int *fail);
 double getDecimal(struct TLObject *obj, int *fail);
-struct TLString *getTLString(struct TLObject *obj);
+struct TLString **getTLString(struct TLObject *obj);
 int assignArray(struct TLObject **obj, struct TLArray *value);
 int assignString(struct TLObject **obj, char *string);
 int assignStructure(struct TLObject **obj, struct TLStruct *value);

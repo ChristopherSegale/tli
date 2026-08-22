@@ -45,17 +45,21 @@ int main(int argc, char *argv[]) {
   cleanTLObject(&obj);
 
   obj = makeObject(DataString, NULL);
-  struct TLString *d = getTLString(obj);
-  printTest(tn++, !d->string);
-  printTest(tn++, intTest(d->size, 0));
+  struct TLString **d = getTLString(obj);
+  printTest(tn++, !(**d).string);
+  printTest(tn++, intTest((**d).size, 0));
+
+  pushTLChar(d, 'c');
+  printTest(tn++, getTLChar(*d, 0) == 'c');
+  cleanTLString(d);
   cleanTLObject(&obj);
 
   uint8_t e[] = {'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'};
-  struct TLString f = makeTLString(e, sizeof(e) / sizeof(e[0]));
-  obj = makeObject(DataString, &f);
+  struct TLString *f = makeTLString(e, sizeof(e) / sizeof(e[0]));
+  obj = makeObject(DataString, f);
   d = getTLString(obj);
-  printTest(tn++, TLStringcmp(d->string, e, sizeof(e) / sizeof(e[0])));
-  printTest(tn++, intTest(d->size, sizeof(e) / sizeof(e[0])));
+  printTest(tn++, TLStringcmp((**d).string, e, sizeof(e) / sizeof(e[0])));
+  printTest(tn++, intTest((**d).size, sizeof(e) / sizeof(e[0])));
   cleanTLString(d);
   cleanTLObject(&obj);
 

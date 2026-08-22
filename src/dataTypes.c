@@ -38,13 +38,11 @@ struct TLObject *makeObject(enum dataType d, void *value) {
       *(double *)((*obj).data) = *(double *)value;
     break;
   case DataString:
-    (*obj).data = malloc(sizeof(struct TLString));
-    checkNullInit((*obj).data);
     if(value) {
-      *(struct TLString *)((*obj).data) = *(struct TLString *)value;
+      (*obj).data = value;
     }
     else {
-      *(struct TLString *)((*obj).data) = makeTLString(NULL, 0);
+      (*obj).data = makeTLString(NULL, 0);
     }
     break;
   case DataSymbol:
@@ -177,9 +175,9 @@ double getDecimal(struct TLObject *obj, int *fail) {
   }
 }
 
-struct TLString *getTLString(struct TLObject *obj) {
+struct TLString **getTLString(struct TLObject *obj) {
   if(obj && obj->dt == DataString && obj->data)
-    return (struct TLString *)(obj->data);
+    return (struct TLString **)(&(obj->data));
   else
     return NULL;
 }
