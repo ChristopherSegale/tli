@@ -10,8 +10,8 @@ struct TLObject {
 };
 
 struct TLCons {
-  struct TLObject *car;
-  struct TLObject *cdr;
+  struct TLObject **car;
+  struct TLObject **cdr;
 };
 
 struct TLObject *makeObject(enum dataType d, void *value);
@@ -22,7 +22,7 @@ uint8_t getByte(struct TLObject *obj, int *fail);
 int getInteger(struct TLObject *obj, int *fail);
 double getDecimal(struct TLObject *obj, int *fail);
 struct TLString **getTLString(struct TLObject *obj);
-struct TLCons *createTLCons(struct TLObject *car, struct TLObject *cdr);
+struct TLCons *makeTLCons(struct TLObject *car, struct TLObject *cdr);
 struct TLObject **TLCar(struct TLCons **cons, int *fail);
 struct TLObject **TLCdr(struct TLCons **cons, int *fail);
 struct TLCons **getTLCons(struct TLObject *obj);

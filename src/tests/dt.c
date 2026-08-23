@@ -63,5 +63,26 @@ int main(int argc, char *argv[]) {
   cleanTLString(d);
   cleanTLObject(&obj);
 
+  struct TLCons *g = makeTLCons(makeObject(DataInteger, NULL), NULL);
+  struct TLObject **h = TLCar(&g, &fail);
+  int i;
+  if(!fail) {
+    printTest(tn++, (**h).dt == DataInteger);
+    i = getInteger(*h, &fail);
+    if(!fail)
+      printTest(tn++, intTest(getInteger(*h, &fail), 0));
+  }
+  cleanTLCons(&g);
+
+  obj = makeObject(DataCons, makeTLCons(makeObject(DataInteger, &b), NULL));
+  struct TLObject **j = TLCar(getTLCons(obj), &fail);
+  if(!fail) {
+    i = getInteger(*j, &fail);
+    if(!fail)
+      printTest(tn++, intTest(i, 65));
+  }
+  cleanTLCons(getTLCons(obj));
+  cleanTLObject(&obj);
+
   return 0;
 }

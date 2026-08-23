@@ -25,9 +25,9 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     obj->data = malloc(sizeof(int));
     checkNullInit(obj->data);
     if(!value)
-      *(uint8_t *)(obj->data) = 0;
+      *(int *)(obj->data) = 0;
     else
-      *(uint8_t *)(obj->data) = *(int *)value;
+      *(int *)(obj->data) = *(int *)value;
     break;
   case DataDecimal:
     obj->data = malloc(sizeof(double));
@@ -185,11 +185,15 @@ struct TLString **getTLString(struct TLObject *obj) {
     return NULL;
 }
 
-struct TLCons *createTLCons(struct TLObject *car, struct TLObject *cdr) {
+struct TLCons *makeTLCons(struct TLObject *car, struct TLObject *cdr) {
   struct TLCons *val = malloc(sizeof(struct TLCons));
   checkNullInit(val);
-  val->car = car;
-  val->cdr = cdr;
+  val->car = malloc(sizeof(struct TLObject *));
+  checkNullInit(val->car);
+  val->cdr = malloc(sizeof(struct TLObject *));
+  checkNullInit(val->cdr);
+  *(val->car) = car;
+  *(val->cdr) = cdr;
   return val;
 }
 
@@ -197,7 +201,7 @@ struct TLObject **TLCar(struct TLCons **cons, int *fail) {
   if(cons) {
     if(*cons) {
       if((**cons).car)
-	return &((**cons).car);
+	return (**cons).car;
       else
 	return NULL;
     }
@@ -211,7 +215,7 @@ struct TLObject **TLCdr(struct TLCons **cons, int *fail) {
   if(cons) {
     if(*cons) {
       if((**cons).cdr)
-	return &((**cons).cdr);
+	return (**cons).cdr;
       else
 	return NULL;
     }
@@ -230,10 +234,16 @@ struct TLCons **getTLCons(struct TLObject *obj) {
 
 void cleanTLCons(struct TLCons **cons) {
   if(cons && *cons) {
-    if((**cons).car)
+    if((**cons).car) {
+      if(*(**cons).car)
+	free(*(**cons).car);
       free((**cons).car);
-    if((**cons).cdr)
+    }
+    if((**cons).cdr) {
+      if(*(**cons).cdr)
+	free(*(**cons).cdr);
       free((**cons).cdr);
+    }
     free(*cons);
   }
 }
