@@ -74,12 +74,25 @@ int main(int argc, char *argv[]) {
   }
   cleanTLCons(&g);
 
-  obj = makeObject(DataCons, makeTLCons(makeObject(DataInteger, &b), NULL));
+  obj = makeObject(DataCons, makeTLCons(makeObject(DataInteger, &b),
+					makeObject(DataString, NULL)));
   struct TLObject **j = TLCar(getTLCons(obj), &fail);
   if(!fail) {
     i = getInteger(*j, &fail);
     if(!fail)
       printTest(tn++, intTest(i, 65));
+    if(changeInteger(j, 80)) {
+      i = getInteger(*j, &fail);
+      if(!fail)
+	printTest(tn++, intTest(i, 80));
+    }
+  }
+  j = TLCdr(getTLCons(obj), &fail);
+  if(!fail) {
+    d = getTLString(*j);
+    if(pushTLChar(d, 'n'))
+      printTest(tn++, getTLChar(*d, 0) == 'n');
+    cleanTLString(d);
   }
   cleanTLCons(getTLCons(obj));
   cleanTLObject(&obj);
