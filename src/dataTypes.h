@@ -2,7 +2,7 @@
 #define DATATYPES_H
 #include <stdint.h>
 
-enum dataType { DataT, DataByte, DataInteger, DataDecimal, DataArray, DataString, DataStructure, DataCons, DataList, DataFunction, DataSymbol };
+enum dataType { DataT, DataByte, DataInteger, DataDecimal, DataArray, DataString, DataCons, DataList, DataStructure, DataFunction, DataSymbol };
 
 struct TLObject {
   enum dataType dt;
@@ -13,6 +13,11 @@ struct TLCons {
   struct TLObject **car;
   struct TLObject **cdr;
 };
+
+struct TLStruct {
+  struct TLCons *members;
+  int size;
+}
 
 struct TLObject *makeObject(enum dataType d, void *value);
 int changeByte(struct TLObject **obj, uint8_t value);
@@ -26,6 +31,8 @@ struct TLCons *makeTLCons(struct TLObject *car, struct TLObject *cdr);
 struct TLObject **TLCar(struct TLCons **cons, int *fail);
 struct TLObject **TLCdr(struct TLCons **cons, int *fail);
 struct TLCons **getTLCons(struct TLObject *obj);
+struct TLStruct *makeTLStruct(struct TLCons *members);
+struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail)
 void cleanTLCons(struct TLCons **cons);
 int assignArray(struct TLObject **obj, struct TLArray *value);
 int assignString(struct TLObject **obj, char *string);
