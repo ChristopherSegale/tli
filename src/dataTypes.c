@@ -232,6 +232,46 @@ struct TLCons **getTLCons(struct TLObject *obj) {
     return NULL;
 }
 
+struct TLStruct *makeTLStruct(struct TLCons *members, int size) {
+  struct TLStruct *val = malloc(sizeof(struct TLStruct));
+  checkNullInit(val);
+  val->members = members;
+  val->size = size;
+  return val;
+}
+
+struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail) {
+  struct TLObject **val;
+  if(structure && *structure) {
+    if((**structure).members) {
+      struct TLCons *values = (**structure).members;
+      (for int i = 0, fail = 0; i < (**structure).size; i++) {
+	struct TLCons **cell = *(values + i);
+	struct TLObject *field = *(TLCar(cell), &fail);
+	if(fail) {
+	  *fail = 1;
+	  break;
+	}
+	if(field->dt == DataSymbol) {
+	  char *fieldName = (char *)(field->data);
+	  if(strcmp(fieldname, symbol) == 0) {
+	    val = TLCdr(cell, &fail);
+	    if(fail) {
+	      *fail = 1;
+	      break;
+	    }
+	  }
+	}
+      }
+    }
+    else {
+      setError("Null pointer given to 'getField' function.", NULL, 0);
+      *fail = 1;
+    }
+  }
+  return val;
+}
+
 void cleanTLCons(struct TLCons **cons) {
   if(cons && *cons) {
     if((**cons).car) {

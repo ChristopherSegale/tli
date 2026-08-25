@@ -31,15 +31,9 @@ struct TLCons *makeTLCons(struct TLObject *car, struct TLObject *cdr);
 struct TLObject **TLCar(struct TLCons **cons, int *fail);
 struct TLObject **TLCdr(struct TLCons **cons, int *fail);
 struct TLCons **getTLCons(struct TLObject *obj);
-struct TLStruct *makeTLStruct(struct TLCons *members);
-struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail)
+struct TLStruct *makeTLStruct(struct TLCons *members, int size);
+struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail);
 void cleanTLCons(struct TLCons **cons);
-int assignArray(struct TLObject **obj, struct TLArray *value);
-int assignString(struct TLObject **obj, char *string);
-int assignStructure(struct TLObject **obj, struct TLStruct *value);
-int assignCons(struct TLObject **obj, struct TLCons *value);
-int assignList(struct TLObject **obj, struct TLList *value);
-int assignFunction(struct TLObject **obj, struct TLFunc *value);
 void cleanTLObject(struct TLObject **obj);
 
 #endif
