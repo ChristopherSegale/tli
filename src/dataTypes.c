@@ -232,7 +232,7 @@ struct TLCons **getTLCons(struct TLObject *obj) {
     return NULL;
 }
 
-struct TLStruct *makeTLStruct(struct TLCons *members, int size) {
+struct TLStruct *makeTLStruct(struct structField *members, int size) {
   struct TLStruct *val = malloc(sizeof(struct TLStruct));
   checkNullInit(val);
   val->members = members;
@@ -241,35 +241,26 @@ struct TLStruct *makeTLStruct(struct TLCons *members, int size) {
 }
 
 struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail) {
-  struct TLObject **val;
   if(structure && *structure) {
-    if((**structure).members) {
-      struct TLCons *values = (**structure).members;
-      (for int i = 0, fail = 0; i < (**structure).size; i++) {
-	struct TLCons **cell = *(values + i);
-	struct TLObject *field = *(TLCar(cell), &fail);
-	if(fail) {
-	  *fail = 1;
-	  break;
-	}
-	if(field->dt == DataSymbol) {
-	  char *fieldName = (char *)(field->data);
-	  if(strcmp(fieldname, symbol) == 0) {
-	    val = TLCdr(cell, &fail);
-	    if(fail) {
-	      *fail = 1;
-	      break;
-	    }
-	  }
-	}
+    struct structField *fields = (**structure).members;
+    if(fields) {
+      for(int i = 0; i < (**structure).size; i++) {
+	if(strcmp((*(fields + i)).sname, symbol) == 0)
+	  return &((*(fields + i)).value);
       }
+      return NULL;
     }
     else {
-      setError("Null pointer given to 'getField' function.", NULL, 0);
+      setError("The members field of given structure points to null.", NULL, 0);
       *fail = 1;
+      return NULL;
     }
   }
-  return val;
+  else {
+    setError("Null pointer given to 'getField' function.", NULL, 0);
+    *fail = 1;
+    return NULL;
+  }
 }
 
 void cleanTLCons(struct TLCons **cons) {
@@ -285,6 +276,14 @@ void cleanTLCons(struct TLCons **cons) {
       free((**cons).cdr);
     }
     free(*cons);
+  }
+}
+
+void cleanTLStruct(struct TLStruct **structure) {
+  if(structure && *structure) {
+    if((**structure).members)
+      free((**structure).members);
+    free(*structure);
   }
 }
 
