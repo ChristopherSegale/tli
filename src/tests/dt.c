@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
   pushTLChar(d, 'c');
   printTest(tn++, getTLChar(*d, 0) == 'c');
-  cleanTLString(d);
+  //cleanTLString(d);
   cleanTLObject(&obj);
 
   uint8_t e[] = {'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'};
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
   d = getTLString(obj);
   printTest(tn++, TLStringcmp((**d).string, e, sizeof(e) / sizeof(e[0])));
   printTest(tn++, intTest((**d).size, sizeof(e) / sizeof(e[0])));
-  cleanTLString(d);
+  //cleanTLString(d);
   cleanTLObject(&obj);
 
   struct TLCons *g = makeTLCons(makeObject(DataInteger, NULL), NULL);
@@ -92,9 +92,9 @@ int main(int argc, char *argv[]) {
     d = getTLString(*j);
     if(pushTLChar(d, 'n'))
       printTest(tn++, getTLChar(*d, 0) == 'n');
-    cleanTLString(d);
+    //cleanTLString(d);
   }
-  cleanTLCons(getTLCons(obj));
+  //cleanTLCons(getTLCons(obj));
   cleanTLObject(&obj);
 
   return 0;

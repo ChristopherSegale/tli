@@ -48,6 +48,9 @@ struct TLObject *makeObject(enum dataType d, void *value) {
   case DataCons:
     obj->data = value;
     break;
+  case DataStructure:
+    obj->data = value;
+    break;
   case DataSymbol:
     if(!value) {
       setError("Symbol value must be given for for the symbol data type.", NULL, 0);
@@ -248,32 +251,35 @@ struct TLObject **getField(struct TLStruct **structure, const char *symbol, int 
 	if(strcmp((*(fields + i)).sname, symbol) == 0)
 	  return &((*(fields + i)).value);
       }
-      return NULL;
+      setError("Given field is not in given structure.", NULL, 0);
     }
     else {
       setError("The members field of given structure points to null.", NULL, 0);
-      *fail = 1;
-      return NULL;
     }
   }
   else {
     setError("Null pointer given to 'getField' function.", NULL, 0);
-    *fail = 1;
-    return NULL;
   }
+  *fail = 1;
+  return NULL;
+  
+}
+
+struct TLStruct **getTLStruct(struct TLObject *obj) {
+  if(obj) {
+    return (struct TLStruct **)(&(obj->data));
+  }
+  else
+    return NULL;
 }
 
 void cleanTLCons(struct TLCons **cons) {
   if(cons && *cons) {
     if((**cons).car) {
-      if(*(**cons).car)
-	free(*(**cons).car);
-      free((**cons).car);
+      cleanTLObject((**cons).car);
     }
     if((**cons).cdr) {
-      if(*(**cons).cdr)
-	free(*(**cons).cdr);
-      free((**cons).cdr);
+      cleanTLObject((**cons).cdr);
     }
     free(*cons);
   }
@@ -288,9 +294,23 @@ void cleanTLStruct(struct TLStruct **structure) {
 }
 
 void cleanTLObject(struct TLObject **obj) {
-  if(*obj) {
-    if(!((**obj).data))
-      free((**obj).data);
+  if(obj && *obj) {
+    if((**obj).data) {
+      switch((**obj).dt) {
+      case DataString:
+	cleanTLString(getTLString(*obj));
+	break;
+      case DataCons:
+	cleanTLCons(getTLCons(*obj));
+	break;
+      case DataStructure:
+	cleanTLStruct(getTLStruct(*obj));
+	break;
+      default:
+	free((**obj).data);
+	break;
+      }
+    }
     free(*obj);
   }
 }

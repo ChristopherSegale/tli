@@ -38,7 +38,9 @@ struct TLObject **TLCdr(struct TLCons **cons, int *fail);
 struct TLCons **getTLCons(struct TLObject *obj);
 struct TLStruct *makeTLStruct(struct structField *members, int size);
 struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail);
+struct TLStruct **getTLStruct(struct TLObject *obj);
 void cleanTLCons(struct TLCons **cons);
+void cleanTLStruct(struct TLStruct **structure);
 void cleanTLStruct(struct TLStruct **structure);
 void cleanTLObject(struct TLObject **obj);
 
