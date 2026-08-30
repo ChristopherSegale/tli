@@ -287,8 +287,11 @@ void cleanTLCons(struct TLCons **cons) {
 
 void cleanTLStruct(struct TLStruct **structure) {
   if(structure && *structure) {
-    if((**structure).members)
+    if((**structure).members) {
+      if(((**structure).members)->value)
+	cleanTLObject(&(((**structure).members)->value));
       free((**structure).members);
+    }
     free(*structure);
   }
 }
