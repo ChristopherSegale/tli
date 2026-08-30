@@ -97,5 +97,18 @@ int main(int argc, char *argv[]) {
   //cleanTLCons(getTLCons(obj));
   cleanTLObject(&obj);
 
+  int dimensions[] = { 5, 10, 3 };
+  char *slots[] = { "x", "y", "z" };
+  struct structField *k = malloc(sizeof(struct structField) * (sizeof(dimensions) / sizeof(dimensions[0])));
+  for(int index = 0; index < sizeof(dimensions) / sizeof(dimensions[0]); index++) {
+    (k + index)->sname = slots[index];
+    (k + index)->value = makeObject(DataInteger, dimensions + index);
+  }
+  obj = makeObject(DataStructure, makeTLStruct(k, sizeof(dimensions) / sizeof(dimensions[0])));
+  printTest(tn++, intTest(getInteger(*getField(getTLStruct(obj), "x", &fail), &fail) *
+			  getInteger(*getField(getTLStruct(obj), "y", &fail), &fail) *
+			  getInteger(*getField(getTLStruct(obj), "z", &fail), &fail), 150));
+  cleanTLObject(&obj);
+
   return 0;
 }
