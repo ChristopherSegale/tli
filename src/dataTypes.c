@@ -288,8 +288,10 @@ void cleanTLCons(struct TLCons **cons) {
 void cleanTLStruct(struct TLStruct **structure) {
   if(structure && *structure) {
     if((**structure).members) {
-      if(((**structure).members)->value)
-	cleanTLObject(&(((**structure).members)->value));
+      for(int i = 0; i < (**structure).size; i++) {
+	if(((**structure).members + i)->value)
+	  cleanTLObject(&(((**structure).members + i)->value));
+      }
       free((**structure).members);
     }
     free(*structure);
