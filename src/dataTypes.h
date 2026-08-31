@@ -39,6 +39,7 @@ int getInteger(struct TLObject *obj, int *fail);
 double getDecimal(struct TLObject *obj, int *fail);
 struct TLArray *makeTLArray(struct TLObject *members, int size, int capacity);
 struct TLObject **getArrayElement(struct TLArray **array, int index);
+int pushArrayElement(struct TLArray **array, struct TLObject *obj);
 struct TLArray **getTLArray(struct TLObject *obj);
 struct TLString **getTLString(struct TLObject *obj);
 struct TLCons *makeTLCons(struct TLObject *car, struct TLObject *cdr);

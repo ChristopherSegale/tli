@@ -233,6 +233,33 @@ struct TLObject **getArrayElement(struct TLArray **array, int index) {
   }
 }
 
+int pushArrayElement(struct TLArray **array, struct TLObject *obj) {
+  if(array && *array) {
+    if((**array).members) {
+      if((**array).size < (**array).capacity) {
+	((**array).size)++;
+	struct TLObject **a = (&(**array).members + ((**array).size - 1));
+	*a = obj;
+      }
+      else {
+	(**array).capacity = (**array).capacity * 2;
+	((**array).size)++;
+	struct TLObject **a = (&(**array).members + ((**array).size - 1));
+	*a = obj;
+      }
+    }
+    else {
+      setError("Given array has members pointing to null.", NULL, 0);
+      return 0;
+    }
+  }
+  else {
+    setError("Null pointer given to 'pushArrayElement' function.", NULL, 0);
+    return 0;
+  }
+  return 1;
+}
+
 struct TLArray **getTLArray(struct TLObject *obj) {
   if(obj) {
     if(obj->dt == DataArray) {
