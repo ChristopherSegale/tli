@@ -390,9 +390,11 @@ void cleanTLCons(struct TLCons **cons) {
   if(cons && *cons) {
     if((**cons).car) {
       cleanTLObject((**cons).car);
+      free((**cons).car);
     }
     if((**cons).cdr) {
       cleanTLObject((**cons).cdr);
+      free((**cons).cdr);
     }
     free(*cons);
   }
