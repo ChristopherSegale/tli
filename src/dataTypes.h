@@ -9,6 +9,12 @@ struct TLObject {
   void *data;
 };
 
+struct TLArray {
+  int size;
+  int capacity;
+  struct TLObject *members;
+};
+
 struct TLCons {
   struct TLObject **car;
   struct TLObject **cdr;
@@ -31,6 +37,9 @@ int changeDecimal(struct TLObject **obj, double value);
 uint8_t getByte(struct TLObject *obj, int *fail);
 int getInteger(struct TLObject *obj, int *fail);
 double getDecimal(struct TLObject *obj, int *fail);
+struct TLArray *makeTLArray(struct TLObject *members, int size, int capacity);
+struct TLObject **getArrayElement(struct TLArray **array, int index);
+struct TLArray **getTLArray(struct TLObject *obj);
 struct TLString **getTLString(struct TLObject *obj);
 struct TLCons *makeTLCons(struct TLObject *car, struct TLObject *cdr);
 struct TLObject **TLCar(struct TLCons **cons, int *fail);
@@ -39,6 +48,7 @@ struct TLCons **getTLCons(struct TLObject *obj);
 struct TLStruct *makeTLStruct(struct structField *members, int size);
 struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail);
 struct TLStruct **getTLStruct(struct TLObject *obj);
+void cleanTLArray(struct TLArray **array);
 void cleanTLCons(struct TLCons **cons);
 void cleanTLStruct(struct TLStruct **structure);
 void cleanTLStruct(struct TLStruct **structure);

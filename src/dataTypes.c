@@ -181,6 +181,79 @@ double getDecimal(struct TLObject *obj, int *fail) {
   }
 }
 
+struct TLArray *makeTLArray(struct TLObject *members, int size, int capacity) {
+  struct TLArray *val = malloc(sizeof(struct TLArray));
+  checkNullInit(val);
+  if(members) {
+    if(size < 0) {
+      setError("Size must be greater than 0.", NULL, 0);
+      free(val);
+      return NULL;
+    }
+    else if(capacity < size) {
+      setError("Capacity must be greater than or equal to array size.", NULL, 0);
+      free(val);
+      return NULL;
+    }
+    val->size = size;
+    val->capacity = capacity;
+    val->members = members;
+  }
+  else {
+    if(capacity < 0) {
+      setError("Capacity must be greater than 0.", NULL, 0);
+      free(val);
+      return NULL;
+    }
+    val->size = 0;
+    val->capacity = capacity;
+    val->members = malloc(sizeof(struct TLObject) * capacity);
+    checkNullInit(val->members);
+  }
+  return val;
+}
+
+struct TLObject **getArrayElement(struct TLArray **array, int index) {
+  if(array && *array) {
+    if(index <= 0) {
+      setError("Index must be greater than or equal to 0.", NULL, 0);
+      return NULL;
+    }
+    else if(index < (**array).size) {
+      return (&(**array).members + index);
+    }
+    else {
+      setError("Index must be less than the size of the given array.", NULL, 0);
+      return NULL;
+    }
+  }
+  else {
+    setError("Null pointer given to 'getArrayElement' function.", NULL, 0);
+    return NULL;
+  }
+}
+
+struct TLArray **getTLArray(struct TLObject *obj) {
+  if(obj) {
+    if(obj->dt == DataArray) {
+      if(obj->data)
+	return (struct TLArray **)(&(obj->data));
+      else {
+	setError("Data member of object is null.", NULL, 0);
+	return NULL;
+      }
+    }
+    else {
+      setError("Type that is not TLArray given to 'getTLArray' function.", NULL, 0);
+      return NULL;
+    }
+  }
+  else {
+    setError("Null pointer given to 'getTLArray' function.", NULL, 0);
+    return NULL;
+  }
+}
+
 struct TLString **getTLString(struct TLObject *obj) {
   if(obj && obj->dt == DataString && obj->data)
     return (struct TLString **)(&(obj->data));
@@ -271,6 +344,19 @@ struct TLStruct **getTLStruct(struct TLObject *obj) {
   }
   else
     return NULL;
+}
+
+void cleanTLArray(struct TLArray **array) {
+  if(array && *array && (**array).members) {
+    if((**array).size > 0) {
+      for(int i = 0; i < (**array).size; i++) {
+	struct TLObject *obj = (**array).members + i;
+	cleanTLObject(&obj);
+      }
+    }
+    free((**array).members);
+    free(*array);
+  }
 }
 
 void cleanTLCons(struct TLCons **cons) {
