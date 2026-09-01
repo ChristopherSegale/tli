@@ -38,6 +38,9 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     else
       *(double *)(obj->data) = *(double *)value;
     break;
+  case DataArray:
+    obj->data = value;
+    break;
   case DataString:
     if(value) {
       obj->data = value;

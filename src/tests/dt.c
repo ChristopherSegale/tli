@@ -110,5 +110,21 @@ int main(int argc, char *argv[]) {
 			  getInteger(*getField(getTLStruct(obj), "z", &fail), &fail), 150));
   cleanTLObject(&obj);
 
+  struct TLObject **l = malloc(sizeof(struct TLObject *) * 3);
+  *l = makeObject(DataInteger, &b);
+  *(l + 1) = makeObject(DataDecimal, &c);
+  obj = makeObject(DataArray, makeTLArray(l, 3, 3));
+  struct TLArray **m = getTLArray(obj);
+  if(m && *m) {
+    struct TLObject **n = getArrayElement(m, 0);
+    i = getInteger(*n, &fail);
+    if(!fail)
+      printTest(tn++, intTest(i, 65));
+  }
+  else {
+    puts("Failed");
+  }
+  cleanTLObject(&obj);
+
   return 0;
 }
