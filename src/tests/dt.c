@@ -113,13 +113,26 @@ int main(int argc, char *argv[]) {
   struct TLObject **l = malloc(sizeof(struct TLObject *) * 3);
   *l = makeObject(DataInteger, &b);
   *(l + 1) = makeObject(DataDecimal, &c);
-  obj = makeObject(DataArray, makeTLArray(l, 3, 3));
+  obj = makeObject(DataArray, makeTLArray(l, 2, 3));
   struct TLArray **m = getTLArray(obj);
   if(m && *m) {
+    printTest(tn++, intTest((**m).size, 2));
+    printTest(tn++, intTest((**m).capacity, 3));
     struct TLObject **n = getArrayElement(m, 0);
     i = getInteger(*n, &fail);
     if(!fail)
       printTest(tn++, intTest(i, 65));
+    printTest(tn++, decTest(getDecimal(*getArrayElement(m, 1), &fail), 7.5));
+    pushArrayElement(m, makeObject(DataByte, NULL));
+    printTest(tn++, intTest((**m).size, 3));
+    printTest(tn++, getByte(*getArrayElement(m, 2), &fail) == 0);
+    if(pushArrayElement(m, makeObject(DataInteger, NULL))) {
+      i = getInteger(*getArrayElement(m, 3), &fail);
+      if(!fail)
+	printTest(tn++, intTest(i, 0));
+      else
+	printf("%d\n", (**m).size);
+    }
   }
   else {
     puts("Failed");
