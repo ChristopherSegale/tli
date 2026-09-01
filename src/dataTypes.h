@@ -12,7 +12,7 @@ struct TLObject {
 struct TLArray {
   int size;
   int capacity;
-  struct TLObject *members;
+  struct TLObject **members;
 };
 
 struct TLCons {
@@ -37,7 +37,7 @@ int changeDecimal(struct TLObject **obj, double value);
 uint8_t getByte(struct TLObject *obj, int *fail);
 int getInteger(struct TLObject *obj, int *fail);
 double getDecimal(struct TLObject *obj, int *fail);
-struct TLArray *makeTLArray(struct TLObject *members, int size, int capacity);
+struct TLArray *makeTLArray(struct TLObject **members, int size, int capacity);
 struct TLObject **getArrayElement(struct TLArray **array, int index);
 int pushArrayElement(struct TLArray **array, struct TLObject *obj);
 struct TLArray **getTLArray(struct TLObject *obj);

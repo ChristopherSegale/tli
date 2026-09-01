@@ -5,6 +5,7 @@
 #include "dataTypes.h"
 #include "TLString.h"
 #include "error.h"
+#include <stdio.h>
 
 struct TLObject *makeObject(enum dataType d, void *value) {
   struct TLObject *obj = malloc(sizeof(struct TLObject));
@@ -181,7 +182,7 @@ double getDecimal(struct TLObject *obj, int *fail) {
   }
 }
 
-struct TLArray *makeTLArray(struct TLObject *members, int size, int capacity) {
+struct TLArray *makeTLArray(struct TLObject **members, int size, int capacity) {
   struct TLArray *val = malloc(sizeof(struct TLArray));
   checkNullInit(val);
   if(members) {
@@ -215,12 +216,12 @@ struct TLArray *makeTLArray(struct TLObject *members, int size, int capacity) {
 
 struct TLObject **getArrayElement(struct TLArray **array, int index) {
   if(array && *array) {
-    if(index <= 0) {
+    if(index < 0) {
       setError("Index must be greater than or equal to 0.", NULL, 0);
       return NULL;
     }
     else if(index < (**array).size) {
-      return (&(**array).members + index);
+      return (**array).members + index;
     }
     else {
       setError("Index must be less than the size of the given array.", NULL, 0);
@@ -238,14 +239,12 @@ int pushArrayElement(struct TLArray **array, struct TLObject *obj) {
     if((**array).members) {
       if((**array).size < (**array).capacity) {
 	((**array).size)++;
-	struct TLObject **a = (&(**array).members + ((**array).size - 1));
-	*a = obj;
+	*((**array).members + ((**array).size - 1)) = obj;
       }
       else {
 	(**array).capacity = (**array).capacity * 2;
 	((**array).size)++;
-	struct TLObject **a = (&(**array).members + ((**array).size - 1));
-	*a = obj;
+	*((**array).members + ((**array).size - 1)) = obj;
       }
     }
     else {
@@ -377,8 +376,8 @@ void cleanTLArray(struct TLArray **array) {
   if(array && *array && (**array).members) {
     if((**array).size > 0) {
       for(int i = 0; i < (**array).size; i++) {
-	struct TLObject *obj = (**array).members + i;
-	cleanTLObject(&obj);
+	struct TLObject **obj = (**array).members + i;
+	cleanTLObject(obj);
       }
     }
     free((**array).members);
