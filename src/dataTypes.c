@@ -208,7 +208,7 @@ struct TLArray *makeTLArray(struct TLObject **members, int size, int capacity) {
     }
     val->size = 0;
     val->capacity = capacity;
-    val->members = malloc(sizeof(struct TLObject) * capacity);
+    val->members = malloc(sizeof(struct TLObject *) * capacity);
     checkNullInit(val->members);
   }
   return val;
@@ -243,6 +243,8 @@ int pushArrayElement(struct TLArray **array, struct TLObject *obj) {
       }
       else {
 	(**array).capacity = (**array).capacity * 2;
+	(**array).members = realloc((**array).members, sizeof(struct TLObject *) * (**array).capacity);
+	checkNullInit((**array).members);
 	((**array).size)++;
 	*((**array).members + ((**array).size - 1)) = obj;
       }
