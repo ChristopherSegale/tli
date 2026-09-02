@@ -13,6 +13,12 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     return NULL;
   obj->dt = d;
   switch (d) {
+  case DataT:
+    obj->data = NULL;
+    break;
+  case DataNil:
+    obj->data = NULL;
+    break;
   case DataByte:
     obj->data = malloc(sizeof(uint8_t));
     checkNullInit(obj->data);
@@ -38,9 +44,6 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     else
       *(double *)(obj->data) = *(double *)value;
     break;
-  case DataArray:
-    obj->data = value;
-    break;
   case DataString:
     if(value) {
       obj->data = value;
@@ -48,12 +51,6 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     else {
       obj->data = makeTLString(NULL, 0);
     }
-    break;
-  case DataCons:
-    obj->data = value;
-    break;
-  case DataStructure:
-    obj->data = value;
     break;
   case DataSymbol:
     if(!value) {
@@ -68,7 +65,7 @@ struct TLObject *makeObject(enum dataType d, void *value) {
     }
     break;
   default:
-    obj->data = NULL;
+    obj->data = value;
     break;
   }
   return obj;

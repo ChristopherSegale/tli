@@ -139,5 +139,6 @@ int main(int argc, char *argv[]) {
   }
   cleanTLObject(&obj);
 
+  printf("%d\n", tn - 1);
   return 0;
 }

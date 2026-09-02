@@ -2,7 +2,7 @@
 #define DATATYPES_H
 #include <stdint.h>
 
-enum dataType { DataT, DataByte, DataInteger, DataDecimal, DataArray, DataString, DataCons, DataList, DataStructure, DataFunction, DataSymbol };
+enum dataType { DataT, DataNil, DataByte, DataInteger, DataDecimal, DataArray, DataString, DataCons, DataList, DataStructure, DataFunction, DataSymbol };
 
 struct TLObject {
   enum dataType dt;
