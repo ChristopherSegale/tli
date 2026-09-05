@@ -374,6 +374,13 @@ struct TLStruct **getTLStruct(struct TLObject *obj) {
     return NULL;
 }
 
+struct TLFunc **getTLFunc(struct TLObject *obj) {
+  if(obj)
+    return (struct TLFunc **)(&(obj->data));
+  else
+    return NULL;
+}
+
 void cleanTLArray(struct TLArray **array) {
   if(array && *array && (**array).members) {
     if((**array).size > 0) {

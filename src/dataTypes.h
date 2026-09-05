@@ -30,6 +30,23 @@ struct TLStruct {
   int size;
 };
 
+struct chunk {
+  uint8_t *instructions;
+  uint8_t *pc;
+  int size;
+  int capacity;
+};
+
+struct namespace {
+  struct structField *vars;
+  struct namespace *rest;
+};
+
+struct TLFunc {
+  struct chunk *code;
+  struct namespace *ns;
+};
+
 struct TLObject *makeObject(enum dataType d, void *value);
 int changeByte(struct TLObject **obj, uint8_t value);
 int changeInteger(struct TLObject **obj, int value);
@@ -49,6 +66,11 @@ struct TLCons **getTLCons(struct TLObject *obj);
 struct TLStruct *makeTLStruct(struct structField *members, int size);
 struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail);
 struct TLStruct **getTLStruct(struct TLObject *obj);
+struct chunk *makeChunk();
+void growChunk(struct chunk **code);
+void addChunk(struct chunk **code, uint8_t byte);
+struct TLFunc *makeTLFunc(struct chunk *code, struct namespace *ns);
+struct TLFunc **getTLFunc(struct TLObject *obj);
 void cleanTLArray(struct TLArray **array);
 void cleanTLCons(struct TLCons **cons);
 void cleanTLStruct(struct TLStruct **structure);
