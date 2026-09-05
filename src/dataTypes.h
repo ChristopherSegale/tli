@@ -32,7 +32,6 @@ struct TLStruct {
 
 struct chunk {
   uint8_t *instructions;
-  uint8_t *pc;
   int size;
   int capacity;
 };
