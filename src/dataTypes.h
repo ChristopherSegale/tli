@@ -67,6 +67,7 @@ struct TLStruct *makeTLStruct(struct structField *members, int size);
 struct TLObject **getField(struct TLStruct **structure, const char *symbol, int *fail);
 struct TLStruct **getTLStruct(struct TLObject *obj);
 struct chunk *makeChunk();
+int initChunk(struct chunk **code);
 void growChunk(struct chunk **code);
 void addChunk(struct chunk **code, uint8_t byte);
 struct TLFunc *makeTLFunc(struct chunk *code, struct namespace *ns);
