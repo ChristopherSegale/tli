@@ -440,5 +440,6 @@ void cleanTLObject(struct TLObject **obj) {
       }
     }
     free(*obj);
+    *obj = NULL;
   }
 }
